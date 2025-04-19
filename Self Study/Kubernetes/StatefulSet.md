@@ -1,0 +1,12 @@
+StatefulSets are a K8s component used for stateful applications like databases or applications that stores data to keep track of its state.
+- You configure storage for them the same way using deployments
+- statefulSet pods are not identical - it maintains a unique identity for each pod, called a **sticky identity**.
+	- created from the same specification but not interchangeable
+	- has a persistent identifier across any rescheduling. this is a fixed ordered name in the format \$(statefulset name)-$ordinal like mysql-0 and mysql-1
+	- when pod restarts, the IP address changes but the name and endpoint stays the same. this allows it to retain its state and role when it dies
+- Each instance of a stateful application like each replica has its own dedicated PV storage, they're not shared to prevent corruption and to ensure consistency across replicas. 
+	- If a new pod is added, it duplicates the PV storage data from the previous pod, not a random one
+- 2 pod endpoints:
+	- own DNS endpoint from service
+	- individual service name in the format: \${podname}.${governing service domain}
+-  replicating stateful apps is complex and there's a lot of work needed on your end for synchronization and concurrency issues. thus, stateful applications are not good for containerized environments but rather stateless applications

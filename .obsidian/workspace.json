@@ -1,0 +1,221 @@
+{
+  "main": {
+    "id": "bcd8205a1729e37c",
+    "type": "split",
+    "children": [
+      {
+        "id": "7fd8c8e94ca1fff1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "859a5a0eaa6f8018",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "UCSC/CSE114A/Elsa.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Elsa"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "464371168d32d7e0",
+    "type": "split",
+    "children": [
+      {
+        "id": "5f5197af22ba7b59",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a48deccce47eeef1",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "26db5c248f4afa05",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "c2d65670fc83e04a",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "b09449b3501a57fa",
+    "type": "split",
+    "children": [
+      {
+        "id": "f240526a16e67594",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b2af020b392c64ca",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Self Study/Distributed Systems/Distributed Systems Learning.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Distributed Systems Learning"
+            }
+          },
+          {
+            "id": "ab0542caa79ede55",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Self Study/Distributed Systems/Distributed Systems Learning.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Distributed Systems Learning"
+            }
+          },
+          {
+            "id": "6351d90f9e5aa71e",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "3ccab7d5f7ac212a",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Self Study/Distributed Systems/Distributed Systems Learning.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Distributed Systems Learning"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "859a5a0eaa6f8018",
+  "lastOpenFiles": [
+    "2025-04-19.md",
+    "Self Study/Kubernetes/Kubernetes Services.md",
+    "UCSC/CSE114A/Haskell.md",
+    "UCSC/CSE114A/Elsa.md",
+    "Self Study/Kubernetes/Kubernetes Architecture.md",
+    "Self Study/Distributed Systems/Distributed Systems Learning.md",
+    "Images/Pasted image 20250411010033.png",
+    "UCSC/CSE182/SQL.md",
+    "Images/Pasted image 20250419024804.png",
+    "Images/Pasted image 20250419024756.png",
+    "UCSC/CSE182/Practice Homeworks.md",
+    "Images/Pasted image 20250419022513.png",
+    "Images/Pasted image 20250419022136.png",
+    "Images/Pasted image 20250419015518.png",
+    "UCSC/CSE182/The Relational Data Model.md",
+    "Images/Pasted image 20250418171216.png",
+    "UCSC/CSE114A/Introduction.md",
+    "UCSC/CSE114A/Lambda Calculus.md",
+    "Self Study/Kubernetes/Kubernetes Volumes.md",
+    "Self Study/Kubernetes/Kubernetes Components.md",
+    "UCSC/CSE114A/Logistics.md",
+    "Self Study/Terraform/Terraform Introduction.md",
+    "Self Study/Kubernetes/StatefulSet.md",
+    "Images/Pasted image 20250411011120.png",
+    "Images/Pasted image 20250411011041.png",
+    "Images/Pasted image 20250411010149.png",
+    "Untitled.canvas",
+    "Self Study/Kubernetes/Kubernetes Ingress.md",
+    "Self Study/Kubernetes/Kubernetes Namespaces.md",
+    "Self Study/Kubernetes/Kubernetes Resources.md",
+    "UCSC/CSE150/Introduction.md",
+    "UCSC/CSE150/Application Layer.md",
+    "Self Study/Kubernetes/Helm.md",
+    "Self Study/Kubernetes/Minikube and Kubectl.md",
+    "Self Study/Kubernetes/Demo MongoDB Project.md",
+    "Self Study/Kubernetes/Kubernetes YAML Configuration File.md",
+    "UCSC/CSE150/Logistics.md",
+    "Images",
+    "Self Study/Kubernetes/Untitled",
+    "UCSC/CSE150",
+    "UCSC/CSE114A/Untitled",
+    "UCSC/CSE182",
+    "UCSC/CSE114A",
+    "UCSC",
+    "Self Study/SRE",
+    "Self Study/AI Agents",
+    "Self Study/Kubernetes/Service Meshes - Istio"
+  ]
+}

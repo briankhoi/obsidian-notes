@@ -1,0 +1,4 @@
+- https://fullstackdeeplearning.com/course/2022/
+- https://huyenchip.com/machine-learning-systems-design/toc.html
+- https://www.databricks.com/resources/ebook/big-book-of-machine-learning-use-cases?gad_source=1&gclid=EAIaIQobChMI9Y-2qIWFiwMVxkT_AR0FHR2IEAAYASAAEgKXUPD_BwE&scid=7018Y000001Fi1CQAS&utm_ad=665885918604&utm_adgroup=136752133112&utm_campaign=17102589780&utm_content=ebook&utm_medium=paid%20search&utm_offer=big-book-of-machine-learning-use-cases&utm_source=google&utm_term=machine%20learning%20system%20design
+- 
