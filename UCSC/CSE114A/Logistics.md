@@ -1,0 +1,7 @@
+- Every lecture has a quiz, category total is 5% 
+	- Quizzes are valid until 11:59pm, so if you miss a lecture you can watch recording and get points
+	- Quizzes have unlimited attempts on Canvas
+	- Quizzes require a password to access on Canvas
+- Every section has a worksheet, category total is 10%
+	- Most points of worksheet are just for participation, so section attendance is basically mandatory
+- You can skip up to 4 lecture quizzes and 2 lab sections

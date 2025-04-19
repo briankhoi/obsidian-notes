@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "UCSC/CSE114A/Elsa.md",
+                "file": "Self Study/Kubernetes/Kubernetes Volumes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Elsa"
+              "title": "Kubernetes Volumes"
             }
           }
         ]
@@ -170,14 +170,17 @@
   },
   "active": "859a5a0eaa6f8018",
   "lastOpenFiles": [
+    "UCSC/CSE182/SQL.md",
+    "UCSC/CSE182/Introduction.md",
+    "UCSC/CSE114A/Haskell.md",
+    "UCSC/CSE150/Introduction.md",
+    "UCSC/CSE150/Application Layer.md",
+    "UCSC/CSE114A/Elsa.md",
     "2025-04-19.md",
     "Self Study/Kubernetes/Kubernetes Services.md",
-    "UCSC/CSE114A/Haskell.md",
-    "UCSC/CSE114A/Elsa.md",
     "Self Study/Kubernetes/Kubernetes Architecture.md",
     "Self Study/Distributed Systems/Distributed Systems Learning.md",
     "Images/Pasted image 20250411010033.png",
-    "UCSC/CSE182/SQL.md",
     "Images/Pasted image 20250419024804.png",
     "Images/Pasted image 20250419024756.png",
     "UCSC/CSE182/Practice Homeworks.md",
@@ -200,13 +203,10 @@
     "Self Study/Kubernetes/Kubernetes Ingress.md",
     "Self Study/Kubernetes/Kubernetes Namespaces.md",
     "Self Study/Kubernetes/Kubernetes Resources.md",
-    "UCSC/CSE150/Introduction.md",
-    "UCSC/CSE150/Application Layer.md",
     "Self Study/Kubernetes/Helm.md",
     "Self Study/Kubernetes/Minikube and Kubectl.md",
     "Self Study/Kubernetes/Demo MongoDB Project.md",
     "Self Study/Kubernetes/Kubernetes YAML Configuration File.md",
-    "UCSC/CSE150/Logistics.md",
     "Images",
     "Self Study/Kubernetes/Untitled",
     "UCSC/CSE150",

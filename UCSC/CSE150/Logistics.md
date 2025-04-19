@@ -1,0 +1,17 @@
+- Lab sections not mandatory
+- Class lectures in-person, only online for special circumstances like strikes
+- You can attend any lab section regardless of ones you're enrolled in
+- Labs must be done individually, no code copies or online resources
+- Class lectures are mandatory though, 6 in-class pop quizzes totaling 5% of overall grade, only 5 top scores count
+- 4 labs and pre-labs + one final project
+- Can ask AI for general ideas, but cannot ask about solution
+- One page cheat sheet on midterm, two page cheat sheet on final
+- Late submission = 10% penalty for each late day
+- For each project, you have to submit:
+	- Project demo
+		- Screenshots
+	- Source code
+	- README file
+		- How to run
+		- Expected results
+- The course is taught in a "top-down" approach, where we start with the application abstraction layer and make our way down to the physical nature
