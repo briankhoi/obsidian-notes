@@ -12,3 +12,12 @@ Solution:
 ```SQL
 
 ```
+
+## Practice Homework 2.1
+Given the following schema where underlined values are the PK
+![[Pasted image 20250419041758.png]]
+Write queries to answer the following questions:
+1. Who were the male stars in the 2022 movie Avatar?
+2. Which stars appeared in movies produced by MGM in 2019?
+3. Who is the president of MGM?
+4. Which movies are longer than the 2022 movie Avatar?

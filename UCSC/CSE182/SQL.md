@@ -362,5 +362,113 @@ You can also order by expressions: `ORDER BY Quantity * Price DESC`
 Piecing all of this together, this is the final format of a SQL Query:
 ![[Pasted image 20250419024804.png]]
 
+**Selecting from Multiple Relations**
+When you select from multiple relations, the amount of attributes you can select from also extends to the attributes in those relations:
+![[Pasted image 20250419032726.png]]
 
+But what happens if two attributes each in different relations have the same name like movieTitle in the StarsIn and Movies relations?
 
+This is where we have to specify the relation, so we do something like Movies.movieTitle to select the attribute, otherwise we get undefined behavior.
+
+Example:
+`SELECT * FROM Movies, StarsIn WHERE Movies.movieTitle = 'Pretty Woman' AND movieYear <= 1995;`
+
+**Tuple Variables**
+You can set variables that bind to a tuple (row) in a relation. For example, in `SELECT * FROM Movies m, StarsIn s WHERE m.movieTitle = s.movieTitle;`, m and s are both variables that bind to tuples in the Movies and StarsIn relation respectively.
+
+**Self-Join**
+A self-join is a join operation in SQL where a table is joined with itself. This is useful when you need to compare rows within the same table based on a related column. Essentially, you treat the single table as if it were two separate tables, allowing you to compare different rows of that table.
+
+Example:
+Given the following table.
+![[Pasted image 20250419040053.png]]To find pairs of executives born in the same year, we need to compare the birthYear of one executive with the birthYear of every other executive in the same MovieExec table. A regular join would typically involve two different tables. Since we are comparing rows within the same table, we use a self-join.
+
+```SQL
+SELECT Exec1.name, Exec2.name
+FROM MovieExec Exec1, MovieExec Exec2
+WHERE Exec1.birthYear = Exec2.birthYear;
+```
+We essentially treat the MovieExec table as two separate instances and compare them with each other through the WHERE condition.
+
+Note: More conditions should be added to the WHERE so you don't have duplicate values/the same tuple being selected
+
+**SQL Join Expressions**
+Different types of Joins:
+
+<u>JOIN...ON...</u>:
+We can join two relations R(A,B,C) and S(D,E,F) using the JOIN...ON... syntax.
+
+Example:
+```SQL
+SELECT * 
+FROM R JOIN S ON R.A = S.D AND R.B = S.E 
+WHERE R.C = 100 AND S.F < 50;
+```
+Here, we specify which tables we join (R JOIN S) and then set the condition for joining them after the ON, which is R.A = S.D. The WHERE clause also has more conditions but observe that these are individual-relation conditions, that is you are not comparing R and S in the conditions in the WHERE clause. 
+
+The SQL statement results in a view with the following schema: (R.A, R.B, R.C, S.D, S.E, S.F)
+
+Also observe that JOIN...ON.. is somewhat optional, we can rewrite it and make it equivalent by just putting it in the WHERE conditions. However, using JOIN..ON.. makes it obvious on how tables are being joined
+```SQL
+SELECT * 
+FROM R, S 
+WHERE R.A = S.D AND R.B = S.E AND R.C = 100 AND S.F < 50;
+```
+
+<u>CROSS JOIN</u>:
+A CROSS JOIN creates a cartesian product view of all the rows in two relations R and S, so that every row of R is paired with every row of S (i.e. if |R| = n and |S| = m, then a cross join yields n * m rows). The schema of the resulting relation is (R.A, R.B, R.C, S.C, S.D, S.E).
+
+This is equivalent to 
+```SQL
+SELECT *
+FROM R, S;
+```
+* Nobody uses CROSS JOIN
+
+<u>NATURAL JOIN</u>:
+Join that combines the same attributes across tables.
+`R NATURAL JOIN S`, yields the schema (A, B, C, D, E) (note that C only appears once when both relations have it as an attribute).
+
+This is equivalent to:
+```SQL
+SELECT R.A, R.B, R.C, S.D, S.E 
+FROM R, S 
+WHERE R.C = S.C;
+```
+
+**Set and Bag Operations**
+Assuming given example relations of R(A,B,C), and S(AB,C)
+
+<u>Set Union</u>: 
+A set union combines the results of two or more SELECT statements into a single **set**. The unioned relations must have attributes of the same type in the same order (union compatibility) for this to happen (but the attributes/names can be different) and the output naturally has the same schema as R and S. 
+
+Also, since this is a **set** union and the result is a set, then duplicate rows are automatically removed to maintain the set property. 
+
+For reference if R has n rows and S has m rows, and all are distinct, then we end up with m + n rows after the union operator.
+
+Syntax: UNION
+```SQL
+( SELECT * FROM R WHERE A > 10 )
+UNION 
+( SELECT * FROM S WHERE B < 300 );
+```
+
+<u>Bag (Multiset) Union</u>:
+A bag union is the same as a set union except instead of a set result, it is a bag result meaning that duplicate tuples are allowed. However, 
+
+Syntax: UNION ALL
+```SQL
+( SELECT * FROM R WHERE A > 10) 
+UNION ALL 
+( SELECT * FROM S WHERE B < 300 );
+```
+
+<u>Set and Bag (Multiset) Intersection and Difference (Except)</u>
+Like unions, for intersections and differences (also binary operators like unions) to occur you need the relations to be union-compatible. The outputs are also the same type as the input relations R or S.
+
+Set Intersection: `QUERY1 INTERSECT QUERY2`
+Bag Intersection: `QUERY1 INTERSECT ALL QUERY2`
+- Finds all tuples that are in the results of both QUERY1 and QUERY2
+- For bag intersection, since bags can have duplicate rows if there's duplicate rows in either relation, it takes the minimum of the row count in query1 or query2 to put in the resultant intersection bag
+Set Difference: `QUERY1 EXCEPT QUERY2`
+Bag Difference: `QUERY1 EXCEPT ALL QUERY2`

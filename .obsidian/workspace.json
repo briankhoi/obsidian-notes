@@ -13,15 +13,30 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Self Study/Kubernetes/Kubernetes Volumes.md",
+                "file": "UCSC/CSE182/General Review.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Kubernetes Volumes"
+              "title": "General Review"
+            }
+          },
+          {
+            "id": "1ca0c7d23ccd5f1c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "UCSC/CSE182/SQL.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "SQL"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -168,10 +183,18 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "859a5a0eaa6f8018",
+  "active": "1ca0c7d23ccd5f1c",
   "lastOpenFiles": [
     "UCSC/CSE182/SQL.md",
+    "UCSC/CSE182/General Review.md",
+    "Pasted image 20250420195341.png",
     "UCSC/CSE182/Introduction.md",
+    "Pasted image 20250419042326.png",
+    "UCSC/CSE182/Practice Homeworks.md",
+    "Pasted image 20250419041758.png",
+    "Pasted image 20250419040053.png",
+    "Pasted image 20250419032726.png",
+    "Self Study/Kubernetes/Kubernetes Volumes.md",
     "UCSC/CSE114A/Haskell.md",
     "UCSC/CSE150/Introduction.md",
     "UCSC/CSE150/Application Layer.md",
@@ -183,30 +206,21 @@
     "Images/Pasted image 20250411010033.png",
     "Images/Pasted image 20250419024804.png",
     "Images/Pasted image 20250419024756.png",
-    "UCSC/CSE182/Practice Homeworks.md",
     "Images/Pasted image 20250419022513.png",
     "Images/Pasted image 20250419022136.png",
-    "Images/Pasted image 20250419015518.png",
     "UCSC/CSE182/The Relational Data Model.md",
-    "Images/Pasted image 20250418171216.png",
     "UCSC/CSE114A/Introduction.md",
     "UCSC/CSE114A/Lambda Calculus.md",
-    "Self Study/Kubernetes/Kubernetes Volumes.md",
     "Self Study/Kubernetes/Kubernetes Components.md",
     "UCSC/CSE114A/Logistics.md",
     "Self Study/Terraform/Terraform Introduction.md",
     "Self Study/Kubernetes/StatefulSet.md",
-    "Images/Pasted image 20250411011120.png",
-    "Images/Pasted image 20250411011041.png",
-    "Images/Pasted image 20250411010149.png",
     "Untitled.canvas",
     "Self Study/Kubernetes/Kubernetes Ingress.md",
     "Self Study/Kubernetes/Kubernetes Namespaces.md",
     "Self Study/Kubernetes/Kubernetes Resources.md",
     "Self Study/Kubernetes/Helm.md",
     "Self Study/Kubernetes/Minikube and Kubectl.md",
-    "Self Study/Kubernetes/Demo MongoDB Project.md",
-    "Self Study/Kubernetes/Kubernetes YAML Configuration File.md",
     "Images",
     "Self Study/Kubernetes/Untitled",
     "UCSC/CSE150",
