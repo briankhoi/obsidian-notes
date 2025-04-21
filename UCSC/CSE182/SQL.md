@@ -469,6 +469,142 @@ Like unions, for intersections and differences (also binary operators like union
 Set Intersection: `QUERY1 INTERSECT QUERY2`
 Bag Intersection: `QUERY1 INTERSECT ALL QUERY2`
 - Finds all tuples that are in the results of both QUERY1 and QUERY2
-- For bag intersection, since bags can have duplicate rows if there's duplicate rows in either relation, it takes the minimum of the row count in query1 or query2 to put in the resultant intersection bag
+- For bag intersection, since bags can have duplicate rows if there's duplicate rows in either relation, it takes the minimum of the row count in query1 or query2 to put in the resultant intersection bag. So if R had 2 same rows and S had 3 same rows, the bag intersection would have the 2 same rows since it's the minimum row count for both relations (basically min(m, n))
+
 Set Difference: `QUERY1 EXCEPT QUERY2`
 Bag Difference: `QUERY1 EXCEPT ALL QUERY2`
+- Finds tuples that are in the result of QUERY1 but not in QUERY2.
+- For bag difference if there's same rows in both queries, we do num rows in query1 - num rows in query2 and that many rows is in the final bag difference result. However, if there are more same rows in query2 than in query1, instead of going negative we just treat it as 0 and don't include any of those same rows in the final bag difference since there's more same rows in query2 instead of query1. so essentially max(m - n, 0)
+
+**Order of Operations**
+In general, order of operations is left-to-right, so `Q1 EXCEPT Q2 EXCEPT Q3 == ( Q1 EXCEPT Q2 ) EXCEPT Q3`, but INTERSECT has **higher priority** than UNION and EXCEPT
+
+**Subqueries**
+A subquery is a query that is embedded in another query. So like UNION would have two subqueries.
+
+Subqueries can either return a constant (scalar value) used in a WHERE clause or boolean expression or a relation used in a FROM clause.
+
+Example: Subquery returning constants
+In the following query, we use a subquery to try to get the producerC# of a row in another table that matches with the MovieExec cert#. In this instance, the subquery returns a constant to be used in a WHERE clause.
+```SQL
+SELECT e.execName
+FROM MovieExec e
+WHERE e.cert# = (SELECT m.producerC# FROM Movies m WHERE m.movieTitle = 'Star Wars');
+```
+However!! There's a trap here - if the subquery returns one row, it's fine, and if it returns nothing, it's also fine because that means the subquery will just result in NULL. However, what happens if it returns two or more rows? Then how does the e.cert# compare itself to the rows in the main WHERE clause? 
+Answer: It doesn't. If this scenario happens you get a runtime error.
+
+So, the correct way to write this would be to not use a subquery at all, but just pull data from the two tables directly.
+```SQL
+SELECT e.execName 
+FROM Movies m, MovieExec e 
+WHERE m.movieTitle='Star Wars' AND m.producerC# = e.cert#;
+```
+
+Example #2: Subquery returning relations
+In this example, observe how our subquery returns a list of producerC# values from the Movies relation where the condition is satisfied. Then, in the outer statement we iterate through the MovieExec rows and select the execNames where the row's cert# value is in the subquery result array of producerC# values.
+```SQL
+SELECT e.execName 
+FROM MovieExec e WHERE e.cert# 
+IN (SELECT m.producerC# FROM Movies m WHERE m.movieTitle = 'Star Wars');
+```
+
+Question: Is the above statement equal to:
+```SQL
+SELECT e.execName 
+FROM MovieExec e, Movies m 
+WHERE m.movieTitle = 'Star Wars' AND m.producerC# = e.cert#
+```
+Answer: Yes, both statements are functionally equivalent.
+
+Example #3: Subquery returning a relation into the FROM clause
+Question: Are the following queries the same?
+```SQL
+SELECT e.execName 
+FROM MovieExec e, (SELECT m.producerC# FROM Movies m WHERE m.movieTitle = 'Star Wars') p 
+WHERE e.cert# = p.producerC#
+```
+
+```SQL
+SELECT e.execName
+FROM MovieExec e, Movies m 
+WHERE e.cert# = m.producerC# AND m.movieTitle = 'Star Wars';
+```
+
+In the first query, we use a subquery to retrieve a relation, give it an alias p and use it for our WHERE clause.
+
+Note: The subquery returns a table/relation p with only one column/attribute, producerC#. That's why we still need to reference it via p.producerC# even though there's only one value
+
+Indeed, the two statements are equal. They both have the same logic, just applied in different orders - Question -> what is a similar statement one could make as a trick question for statements that are not equal to the one above ^ ask LLMs
+
+**Subqueries with Subqueries**
+A somewhat tedious way to query for MovieExecs of Harrison Ford movies
+```SQL
+SELECT e.execName
+FROM MovieExec e
+WHERE e.cert# IN (SELECT m.producerC# 
+	FROM Movies m
+	WHERE (m.movieTitle, m.movieYear) IN 
+		(SELECT s.movieTitle, s.movieYear
+		FROM StarsIn s
+		WHERE s.starName = 'Harrison Ford')
+```
+
+This can be re-written as:
+```SQL
+SELECT e.execName 
+FROM MovieExec e, Movies m, StarsIn s 
+WHERE e.cert# = m.producerC# AND m.movieTitle = s.movieTitle AND m.movieYear = s.movieYear AND s.starName = 'Harrison Ford';
+```
+
+Also can be re-written as (using JOIN):
+```SQL
+SELECT e.execName 
+FROM MovieExec e 
+	JOIN Movies m ON e.cert# = m.producerC# 
+	JOIN StarsIn s ON (m.movieTitle, m.movieYear) = (s.movieTitle, s.movieYear) 
+WHERE s.starName = 'Harrison Ford';
+```
+
+**Correlated Subqueries**
+Correlated subqueries are subqueries where the inner query (subquery) depends on attributes in the outer query, and this process is called correlation.
+
+Example: Find the movie titles that have been used for two or more movies.
+```SQL
+SELECT DISTINCT m.movieTitle
+FROM Movies m
+WHERE m.movieYear < 
+ANY (SELECT m2.movieYear
+	FROM Movies m2
+	WHERE m2.movieTitle = m.movieTitle);
+```
+In this example, we refer to m inside our subquery to find if any movieTitles in the Movies relation are the same or not. We also then use the comparison of movieYear in the WHERE clause to ensure that they are different movies by checking the movieYear is less than at least one of the other movieYears so that we know the movieTitle has been used for 2+ movies.
+
+Example #2: Finding stars that have been in more than one movie in a year
+```SQL
+SELECT s.starName 
+FROM StarsIn s 
+WHERE EXISTS ( SELECT * 
+	FROM StarsIn c 
+	WHERE s.movieTitle <> c.movieTitle 
+		AND s.movieYear = c.movieYear 
+		AND s.starName = c.starName );
+```
+
+**Set Comparison Operators**
+- x IN Q
+	- Returns true if x occurs in the collection Q
+- x NOT IN Q
+	- Returns true if x does not occur in the collection Q
+- EXISTS Q
+	- Returns true if Q is a non-empty collection
+- NOT EXISTS Q
+	- Returns true if Q is an empty collection
+- x op ANY Q, x op ALL Q in WHERE clause
+	- x is a scalar expression
+	- Q is a SQL query
+	- op is one of { <, <=, >, >=, <>, = }.
+- x op ANY Q
+	- evaluates to TRUE if x satisfies the comparison operator op when compared to at least one value in Q, false otherwise (unless its unknown cause Q is null)
+- x op ALL Q
+	- evaluates to TRUE if x satisfies the comparison operator op when compared to all values in Q, false otherwise (unless all values in q satisfy and the rest are null, then evaluates to unknwon)
