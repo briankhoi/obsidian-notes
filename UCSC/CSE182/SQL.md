@@ -226,7 +226,7 @@ Behind the scenes, this is represented as something like
 ```python
 for row in Movies:
 	# filtering step
-	if row.year == 1990 and row.studio == "Disney":
+	if row.year = 1990 and row.studio = "Disney":
 		return row
 ```
 

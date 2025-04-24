@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "UCSC/CSE182/General Review.md",
+                "file": "UCSC/CSE150/Application Layer.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "General Review"
+              "title": "Application Layer"
             }
           }
         ],
@@ -185,7 +185,14 @@
   },
   "active": "1ca0c7d23ccd5f1c",
   "lastOpenFiles": [
+    "UCSC/CSE150/Introduction.md",
+    "UCSC/CSE150/Application Layer.md",
+    "Pasted image 20250423163346.png",
+    "Pasted image 20250423161837.png",
+    "UCSC/CSE114A/Lambda Calculus.md",
+    "UCSC/CSE114A/Logistics.md",
     "UCSC/CSE182/SQL.md",
+    "UCSC/CSE114A/Haskell.md",
     "UCSC/CSE182/General Review.md",
     "Pasted image 20250420195341.png",
     "UCSC/CSE182/Introduction.md",
@@ -195,9 +202,6 @@
     "Pasted image 20250419040053.png",
     "Pasted image 20250419032726.png",
     "Self Study/Kubernetes/Kubernetes Volumes.md",
-    "UCSC/CSE114A/Haskell.md",
-    "UCSC/CSE150/Introduction.md",
-    "UCSC/CSE150/Application Layer.md",
     "UCSC/CSE114A/Elsa.md",
     "2025-04-19.md",
     "Self Study/Kubernetes/Kubernetes Services.md",
@@ -206,13 +210,9 @@
     "Images/Pasted image 20250411010033.png",
     "Images/Pasted image 20250419024804.png",
     "Images/Pasted image 20250419024756.png",
-    "Images/Pasted image 20250419022513.png",
-    "Images/Pasted image 20250419022136.png",
     "UCSC/CSE182/The Relational Data Model.md",
     "UCSC/CSE114A/Introduction.md",
-    "UCSC/CSE114A/Lambda Calculus.md",
     "Self Study/Kubernetes/Kubernetes Components.md",
-    "UCSC/CSE114A/Logistics.md",
     "Self Study/Terraform/Terraform Introduction.md",
     "Self Study/Kubernetes/StatefulSet.md",
     "Untitled.canvas",
