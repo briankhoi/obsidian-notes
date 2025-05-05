@@ -607,4 +607,67 @@ WHERE EXISTS ( SELECT *
 - x op ANY Q
 	- evaluates to TRUE if x satisfies the comparison operator op when compared to at least one value in Q, false otherwise (unless its unknown cause Q is null)
 - x op ALL Q
-	- evaluates to TRUE if x satisfies the comparison operator op when compared to all values in Q, false otherwise (unless all values in q satisfy and the rest are null, then evaluates to unknwon)
+	- evaluates to TRUE if x satisfies the comparison operator op when compared to all values in Q, false otherwise (unless all values in q satisfy and the rest are null, then evaluates to unknown)
+
+**SQL Aggregates**
+SQL has 5 aggregation operators (AGGOP) which are used for computing summary results over a table, like finding the average score of all students in a class. These operators are applied on scalar values (like 1.1 * salary or salary) aside from the COUNT operator, and are specified in the SELECT clause. They also all return a scalar value.
+
+The SQL aggregation operators are:
+- COUNT(A)
+	- Returns the number of non-NULL values in the A column
+- SUM(A)
+	- Returns the sum of all non-NULL values in the A column
+- AVG(A)
+	- Returns the average of all non-NULL values in the A column
+- MAX(A) and MIN(A)
+	- Return the maximum value or minimum non-NULL value in the A column
+For the COUNT, SUM, and AVG operators, you can optionally specify a DISTINCT clause next to the column (like DISTINCT A) to apply the operator to only DISTINCT/different non-NULL values.
+
+Example:
+Given the following table:
+![[Pasted image 20250504201549.png]]
+
+Find the average net worth of all MovieExecs.
+
+Answer: `SELECT AVG(netWorth) FROM MovieExec;`
+- note: returns a scalar value instead of the traditional rows! so you can do stuff like
+```SQL
+SELECT column1, column2
+FROM SomeOtherTable
+WHERE SomeValue > (SELECT AVG(netWorth) FROM MovieExec);
+```
+
+Example 2:
+Given the SQL query:
+```SQL
+SELECT MAX(length), MIN(length) FROM Movies;
+```
+since they return both scalar values, remember to attach alias to them so you can use them in other parts of queries like so:
+```SQL
+SELECT m.title, m.length, limits.max_len, limits.min_len
+FROM Movies m, -- The comma implies a CROSS JOIN here since there's no ON clause
+     (SELECT MAX(length) AS max_len, MIN(length) AS min_len FROM Movies) AS limits
+WHERE m.length = limits.max_len OR m.length = limits.min_len;
+-- This example finds the movies that actually have the max or min length --
+```
+
+**GROUP BY**
+The `GROUP BY` clause is used for grouping things together, commonly attribute values. For instance, given a movies relation Movies(movieTitle, movieYear, length, genre, studioName, producerC#), observe how the following query finds the sum of lengths of all movies for each studio.
+```SQL 
+SELECT studioName, SUM(length)
+FROM Movies
+GROUP BY studioName;
+```
+
+The GROUP BY clause follows the WHERE clause and is structured like so:
+![[Pasted image 20250504202530.png]]
+
+Example:
+
+
+**Aggregation and GROUP BY Conflicts**
+Note that if you have a GROUP BY clause, the attributes that you put in the SELECT clause MUST be also in the GROUP BY clause or else you'll get an error, since GROUP BY works on the entire table summary/groups. Also, if you have an aggregation operator in the SELECT clause, ALL the other attributes in the SELECT clause must either also be in the GROUP BY clause, or also be aggregation operators. You cannot select table summary-type elements like the group by/aggregation op with more single-row oriented elements like a name attribute.
+
+Essentially, aggregate-types process multiple inputs to make a single output, while row-types output one row for each input row that matches, so due to this conflict in level of detail the two are incompatible in a final query and cannot be selected together.
+
+It is also possible to write GROUP BY without aggregates and vice versa

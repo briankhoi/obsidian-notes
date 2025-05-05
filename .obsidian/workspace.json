@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "UCSC/CSE150/Application Layer.md",
+                "file": "UCSC/CSE182/SQL.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Application Layer"
+              "title": "SQL"
             }
           },
           {
@@ -92,7 +92,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "b09449b3501a57fa",
@@ -184,24 +185,26 @@
   },
   "active": "859a5a0eaa6f8018",
   "lastOpenFiles": [
+    "Pasted image 20250504202530.png",
+    "Pasted image 20250504201549.png",
+    "Images/Pasted image 20250419032726.png",
+    "Images/Pasted image 20250419040053.png",
+    "Self Study/AI Agents/NVIDIA AI Agent Workshop TiECon 2025.md",
+    "UCSC/CSE150/Application Layer.md",
     "UCSC/CSE114A/Haskell.md",
     "UCSC/CSE114A/Elsa.md",
     "UCSC/CSE114A/Lambda Calculus.md",
     "UCSC/CSE114A/Introduction.md",
-    "UCSC/CSE150/Application Layer.md",
-    "Pasted image 20250424015138.png",
-    "Pasted image 20250424004424.png",
-    "Pasted image 20250424004150.png",
-    "Pasted image 20250424003931.png",
+    "Images/Pasted image 20250424015138.png",
+    "Images/Pasted image 20250424004424.png",
+    "Images/Pasted image 20250424004150.png",
+    "Images/Pasted image 20250424003931.png",
     "UCSC/CSE114A/Logistics.md",
-    "Pasted image 20250424001921.png",
-    "Pasted image 20250424001845.png",
-    "Pasted image 20250424001834.png",
+    "Images/Pasted image 20250424001921.png",
+    "Images/Pasted image 20250424001845.png",
+    "Images/Pasted image 20250424001834.png",
     "UCSC/CSE182/SQL.md",
     "UCSC/CSE150/Introduction.md",
-    "Pasted image 20250423191345.png",
-    "Pasted image 20250423185615.png",
-    "Pasted image 20250423185314.png",
     "UCSC/CSE182/General Review.md",
     "UCSC/CSE182/Introduction.md",
     "UCSC/CSE182/Practice Homeworks.md",
@@ -219,7 +222,6 @@
     "Self Study/Kubernetes/Kubernetes Namespaces.md",
     "Self Study/Kubernetes/Kubernetes Resources.md",
     "Self Study/Kubernetes/Helm.md",
-    "Self Study/Kubernetes/Minikube and Kubectl.md",
     "Images",
     "Self Study/Kubernetes/Untitled",
     "UCSC/CSE150",
