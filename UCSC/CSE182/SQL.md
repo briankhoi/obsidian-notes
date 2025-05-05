@@ -423,7 +423,10 @@ This is equivalent to
 SELECT *
 FROM R, S;
 ```
-* Nobody uses CROSS JOIN
+* Nobody uses CROSS JOIN syntax over just using commas.
+
+![[Pasted image 20250504222547.png]]
+
 
 <u>NATURAL JOIN</u>:
 Join that combines the same attributes across tables.
@@ -684,6 +687,26 @@ GROUP BY e.execName;
 ```
 This statement shows each movie exec's name and the average length of movies made by that exec. Note how it can be potentially wrong because all execs with the same name are grouped together even if they have different cert# values. So if we had two John Smith's, because the GROUP BY operator works first, it creates a John Smith group. Then, the AVG AGGOP operates on the length values belonging to ALL John Smiths, giving a combined weird and wrong average value.
 
+Example 3:
+Given this reference table:
+![[Pasted image 20250504205437.png]]
+
+1. What is the result of this query?
+```SQL
+SELECT A, B, SUM(C), MAX(D)
+FROM R
+GROUP BY A, B;
+```
+This query creates groups of unique A, B pairs like a1, b1, then finds the sum of all the C attributes and the max of the D attributes that have their A, B value equal to the group. It will finally display the A, B values that define the group along with the calculated SUM(C) and MAX(D). For instance, for a1, b1, SUM(C) = 1 + 2 + 6 since those rows all have a1, b1, while max(D) is 12.
+
+2. What if the query asked for B after SUM(C)?
+	- If the query asked for B after SUM(C), only the order of columns changes since SELECT ordering affects presentation order only, not actual data.
+3. What if the query didn’t ask for A in the SELECT?
+	- The query is still valid since it's only invalid if there's a SELECT attribute that's not an AGGOP or in the GROUP BY clause as well. The only difference is that since the A column won't be in the resulting view table, there may be some duplicate values like 2 b1's, but these are referring to different groups (one for a1, one for a2) so it may be hard to differentiate. But the presentation and data is still the same and the query is valid.
+4. Does SELECT DISTINCT have any effect when there’s a GROUP BY?
+	- No, because the GROUP BY clause inherently produces only one unique row for each distinct combination of the grouping keys.
+- What if we SELECT DISTINCT on just B, SUM(C), MAX(D) (so don't include A in the select attributes query)?
+	- Then in that case, if we have two identical rows of B, SUM(C), MAX(D), but there's two since they correspond to different A's/A, B pairings, then DISTINCT would take effect and eliminate one of them in the final result view
 
 **Aggregation and GROUP BY Properties**
 
@@ -695,3 +718,140 @@ Essentially, aggregate-types process multiple inputs to make a single output, wh
 It is also possible to write GROUP BY without aggregates and vice versa.
 
 <u>NULL Interactions</u>:
+NULLs are ignored in any aggregation, so they do not contribute to the SUM, AVG, COUNT, MIN, MAX of an attribute. 
+- However for COUNT there are two edge cases:
+	- COUNT(\*) = number of tuples in a relation (even if some columns are null)
+	- COUNT(A) is the number of tuples with non-null values for attribute A
+- SUM, AVG, MIN, MAX on an empty result (no tuples) is NULL
+	- COUNT of an empty result is 0
+- GROUP BY does NOT ignore NULLs
+	- GROUP BY treats NULL as a value, meaning it can be its own group and group all the rows with NULL in that attribute together (the NULL group)
+
+Example: 
+Given the relation R(A, B) which contains a single tuple (NULL, NULL)
+1. What does `SELECT A, COUNT(B) FROM R GROUP BY A;` do?
+	1. returns a row of NULL, 0 cause count(B) is num of tuples with non-null values while NULL is the group name
+2. What does `SELECT A, COUNT(*) FROM R GROUP BY A;` do?
+	- returns a row of NULL, 1 cause count(\*) gives num of tuples in a relation including null ones
+3. What does `SELECT A, SUM(B) FROM R GROUP BY A;` do?
+	- returns a NULL, NULL row because sum returns null on empty result
+
+**HAVING Clause**
+The HAVING clause let's you choose your groups in a GROUP BY statement based on some aggregate property of the group itself (like a where clause but applied to groups). Since it is reliant on groups, you cannot use it without the GROUP BY clause. Note that the same attributes and aggregates that can appear in the SELECT clause can also appear in the HAVING clause (so match aggregate types and row-oriented types together don't combine them. this is the same property that SELECT and GROUP BY share)
+
+Structure: 
+![[Pasted image 20250504220514.png]]
+
+Updated Procedure:
+![[Pasted image 20250504220527.png]]
+
+<u>In the below examples, we assume that MovieExec.execName is UNIQUE</u>
+
+Example:
+Find the name and total film length for just those producers who made
+at least one film prior to 1930.
+```SQL
+SELECT e.execName, SUM(m.length)
+FROM MovieExec e, Movies m
+WHERE m.producerC# = e.cert#
+GROUP BY e.execName
+HAVING MIN(m.movieYear) < 1930;
+```
+
+Example 2:
+Find the total film length for just those producers who made films in at least 4 different years.
+```SQL
+SELECT e.execName, SUM(m.length)
+FROM MovieExec e, Movies m
+WHERE m.producerC# = e.cert#
+GROUP BY e.execName
+HAVING COUNT(DISTINCT m.movieYear) >= 4;
+```
+
+Example 3:
+Find the total film length and the latest movie year, for just those producers who made movies in at least 4 different years, and who made at least one film prior to 1930.
+```SQL
+SELECT e.execName, SUM(m.length), MAX(m.movieYear)
+FROM MovieExec e, Movies m
+WHERE m.producerC# = e.cert#
+GROUP BY e.execName
+HAVING COUNT(DISTINCT m.movieYear) >= 4
+ AND MIN(m.movieYear) < 1930;
+```
+Note: We are assuming that execName is UNIQUE, but if it isn't then we risk running into scenarios where there are two execs with the same name, like 'John Smith', it counts the distinct years in which any of the John Smiths produced a movie. Then, a group might falsely satisfy the HAVING condition because, collectively, the different executives with that name made films across 4 or more distinct years, even if no single executive named 'John Smith' did so individually. There are also other parts that are impacted like the same thing happening to satisfy MIN, and the SELECT values of SUM and MAX being wrong too.
+
+Example 4:
+Find the minimum age of sailors in each rating category such that the minimum age of the sailors in that category is greater than the average age of all sailors.
+```SQL
+SELECT S.rating, MIN(S.age)
+FROM Sailors S
+GROUP BY S.rating
+HAVING MIN(S.age) > ( SELECT AVG(S2.age)
+ FROM Sailors S2 );
+```
+
+
+Example 5:
+Find the second minimum age of sailors.
+```SQL
+SELECT MIN(S.age)
+FROM Sailors S
+WHERE S.age > ( SELECT MIN(S2.age)
+ FROM Sailors S2 );
+```
+
+1. What happens when there is only one sailor? 
+	- Because there is only one row, the WHERE clause is never satisfied due to there not being any age greater than the only value of age. Thus, the outer MIN function is therefore applied to an empty set of rows and returns NULL
+2. What happens when all sailors have the same age? 
+	- This leads to the same scenario has the previous one where since the WHERE clause is never satisfied, it returns an empty set of rows which MIN evaluates and returns NULL
+3. What happens when there are no sailors? 
+	- The inner subquery runs on an empty table and returns NULL. Since we have a NULL comparison in the WHERE clause, this returns UNKNOWN and since it's UNKNOWN it's not return in the result view. Also, the outer query operates on an empty table too due to the FROM statement and thus the MIN runs on an empty set and returns NULL
+4. Can you figure how to find the third minimum age of sailors?
+	- Yes, we can extend the logic. The original query found the second minimum by finding the minimum age greater than the first minimum. To find the third minimum, we need to find the minimum age that is greater than the second minimum. We can achieve this by nesting the subqueries further.
+```SQL
+-- Find the third minimum age of sailors
+SELECT MIN(S.age) -- Select the minimum age...
+FROM Sailors S
+WHERE S.age > ( -- ...that is greater than the second minimum age.
+
+                  -- This inner part calculates the second minimum age
+                  SELECT MIN(S2.age)
+                  FROM Sailors S2
+                  WHERE S2.age > ( -- ...by finding the minimum age greater than the first minimum age.
+
+                                   -- This innermost part calculates the first minimum age
+                                   SELECT MIN(S3.age)
+                                   FROM Sailors S3
+                                 )
+
+                );
+```
+
+Example 6: Illegal Examples
+In the following examples, each statement is illegal/not valid SQL because aggregates can't appear in WHERE clauses, except in legal subqueries like the previous examples.
+```SQL
+-- Statement 1
+SELECT MIN(S.age)
+FROM Sailors S
+WHERE S.age > MIN(S.age);
+
+-- Statement 2
+SELECT MIN(S.age)
+FROM Sailors S
+WHERE S.age > MIN(S2.age);
+
+-- Statement 3
+SELECT MIN(S.age)
+FROM Sailors S
+WHERE S.age > ( MIN(S2.age)
+ FROM Sailors S2 );
+
+-- Statement 4
+SELECT MIN(S.age)
+FROM Sailors S
+WHERE S.age > MIN ( SELECT S2.age
+ FROM Sailors S2 );
+```
+
+**Count Examples**
+Example 1:
