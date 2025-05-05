@@ -662,12 +662,36 @@ GROUP BY studioName;
 The GROUP BY clause follows the WHERE clause and is structured like so:
 ![[Pasted image 20250504202530.png]]
 
+Procedure: Notice how the GROUP BY operator is applied FIRST, AND THEN the aggregate operators.
+![[Pasted image 20250504204919.png]]
+
 Example:
+The two statements are equivalent (but NEVER use GROUP BY unnecessarily to remove duplicates, just use DISTINCT):
+```SQL
+-- Statement 1 (no GROUP BY)
+SELECT DISTINCT studioName FROM Movies;
+
+-- Statement 2 (using GROUP BY)
+SELECT studioName FROM Movies GROUP BY studioName;
+```
+
+Example 2:
+```SQL
+SELECT e.execName, AVG(m.length)
+FROM MovieExec e, Movies m
+WHERE m.producerC# = e.cert#
+GROUP BY e.execName;
+```
+This statement shows each movie exec's name and the average length of movies made by that exec. Note how it can be potentially wrong because all execs with the same name are grouped together even if they have different cert# values. So if we had two John Smith's, because the GROUP BY operator works first, it creates a John Smith group. Then, the AVG AGGOP operates on the length values belonging to ALL John Smiths, giving a combined weird and wrong average value.
 
 
-**Aggregation and GROUP BY Conflicts**
+**Aggregation and GROUP BY Properties**
+
+<u>Conflict</u>:
 Note that if you have a GROUP BY clause, the attributes that you put in the SELECT clause MUST be also in the GROUP BY clause or else you'll get an error, since GROUP BY works on the entire table summary/groups. Also, if you have an aggregation operator in the SELECT clause, ALL the other attributes in the SELECT clause must either also be in the GROUP BY clause, or also be aggregation operators. You cannot select table summary-type elements like the group by/aggregation op with more single-row oriented elements like a name attribute.
 
 Essentially, aggregate-types process multiple inputs to make a single output, while row-types output one row for each input row that matches, so due to this conflict in level of detail the two are incompatible in a final query and cannot be selected together.
 
-It is also possible to write GROUP BY without aggregates and vice versa
+It is also possible to write GROUP BY without aggregates and vice versa.
+
+<u>NULL Interactions</u>:
