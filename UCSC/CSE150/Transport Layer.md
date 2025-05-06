@@ -359,10 +359,24 @@ Sender increases transmission rate (window size) until loss occurs
 ![[Pasted image 20250506025729.png]]
 
 **TCP Throughput**
-Average Window Size = 3/4 W
+Average Window Size = 3/4 W (unit for W is bytes)
 Average TCP Throughput = (3/4 * W/RTT) bytes/sec
+- unit for RTT is seconds
 ![[Pasted image 20250506032147.png]]
 ![[Pasted image 20250506032155.png]]
 
-Example:
+<u>Mathis' Formula</u>
+In this example we are given Mathis' formula to calculate throughput in terms of segment loss probability. To calculate the loss we would need to achieve the given spec of 10 Gbps, we plug in throughput = 10 Gbps = 10^9 bytes/sec, RTT = 100ms = 0.1s (must be in seconds0, MSS = 1500B and derive for L
 ![[Pasted image 20250506032233.png]]
+
+**TCP Fairness**
+Goal: If K TCP sessions share same bottleneck link of bandwidth R, each should have average rate of R/K.
+
+TCP tries to be fair when many users are sharing the internet. Imagine two people (Connection 1 and Connection 2) trying to send data through the same pipe that has a limited capacity (R). If there's no problem (no data loss), both users slowly try to send more data (additive increase). If the pipe gets too full and data starts to get lost, both users quickly cut their sending rate in half (multiplicative decrease). This process of gently increasing and then drastically decreasing when there's a problem makes both users' data rates go up and down, but over time, they tend to meet near a point where they are each getting an "equal bandwidth share" (the dashed line in the diagram). This back-and-forth adjustment helps them share the limited internet pipe without one user completely hogging it all the time.
+
+![[Pasted image 20250506032921.png]]
+
+While TCP is fair, protocols like UDP is not fair and a high-rate UDP stream can consume a disproportionate amount of bandwidth that contributes to congestion, which can disrupt the flow of TCP connections (causing them to slow down) and can be seen as unfair to the TCP flows that are trying to be good network citizens. UDP applications do not follow TCP's congestion control rules and can send data at their desired rate.
+
+<u>TCP Parallelism</u>
+Applications can open multiple parallel connections between two hosts simultaneously to the same server to get more bandwidth. for instance, if you have a link of rate R with 9 existing connections and TCP gives rate of R/9 accordingly. You can have an app that might need a lot of bandwidth or is aggressive, so it asks for 9 TCP connections, and thus since each connection has now rate R/18 since 18 connections total now, that one app effectively has a connection rate of R/2 by using more connections
