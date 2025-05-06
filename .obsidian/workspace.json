@@ -25,14 +25,12 @@
             "id": "e271338b3506b624",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "image",
               "state": {
-                "file": "UCSC/CSE150/Application Layer.md",
-                "mode": "source",
-                "source": false
+                "file": "Images/Pasted image 20250505223830.png"
               },
-              "icon": "lucide-file",
-              "title": "Application Layer"
+              "icon": "lucide-image",
+              "title": "Pasted image 20250505223830"
             }
           }
         ]
@@ -184,19 +182,19 @@
   },
   "active": "2176118e07044835",
   "lastOpenFiles": [
-    "Pasted image 20250506004358.png",
-    "Pasted image 20250506002307.png",
-    "Pasted image 20250506002211.png",
-    "Pasted image 20250506002050.png",
-    "Pasted image 20250506001245.png",
-    "Pasted image 20250506001231.png",
-    "Pasted image 20250506001222.png",
-    "Pasted image 20250506001210.png",
-    "Pasted image 20250506001203.png",
+    "Pasted image 20250506032233.png",
+    "Pasted image 20250506032155.png",
+    "Pasted image 20250506032147.png",
+    "Images/Pasted image 20250505223830.png",
     "UCSC/CSE150/Application Layer.md",
     "UCSC/CSE150/Transport Layer.md",
-    "Pasted image 20250505233047.png",
-    "Pasted image 20250505233011.png",
+    "Pasted image 20250506030908.png",
+    "Images/Pasted image 20250506030923.png",
+    "Images/Pasted image 20250506030800.png",
+    "Images/Pasted image 20250506025729.png",
+    "Images/Pasted image 20250506024431.png",
+    "Images/Pasted image 20250506024244.png",
+    "Images/Pasted image 20250506024155.png",
     "UCSC/CSE114A/Haskell.md",
     "UCSC/CSE182/SQL.md",
     "UCSC/CSE182/The Relational Data Model.md",

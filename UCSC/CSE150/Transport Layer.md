@@ -117,7 +117,7 @@ Fragments of the FSM (cause rest is somewhat identical to RDT 2.1)
 <u>RDT 3.0: Channels with Error and Loss</u>
 With RDT 3.0, we introduce a new assumption that the underlying channel can also lose packets (data, ACKs).
 
-So, our approach is that the sender waits a "reasonable" amount of time for the ACK and retransmits if no ACK is received in this time. If the packet or ACK is just delayed and not lost, then retransmission will result in a duplicate packet but the sequence number mechanism already handles duplicates. The receiver must also specify the sequence number of the packet being ACKed and the system overall requires a countdown timer.
+So, our approach is that the sender waits a "reasonable" amount of time for the ACK and retransmits if no ACK is received in this time. If the packet or ACK is just delayed and not lost, then retransmission (retrx) will result in a duplicate packet but the sequence number mechanism already handles duplicates. The receiver must also specify the sequence number of the packet being ACKed and the system overall requires a countdown timer.
 
 Sender FSM:
 ![[Pasted image 20250505214903.png]]
@@ -235,3 +235,134 @@ The sender limits the amount of unack'ed in-flight data to the receiver's rwnd v
 <u>Connection Management</u>
 
 Establishing a Connection:
+Before exchanging data, the sender and receiver must handshake where they agree to establish the connection (each knowing the other is willing to establish connection) and the connection parameters
+![[Pasted image 20250506004845.png]]
+- estab = established
+
+Traditional 2-Way Handshake:
+![[Pasted image 20250506004942.png]]In network, the 2-way handshake won't always work due to variable delays, retransmitted messages due to message loss, message reordering, and not being able to see the other side (don't know the state or intentions of other party).
+![[Pasted image 20250506005612.png]]
+- Left failure: half open connection (server establishes connection but there's no client)
+- Right failure: Client assumes that the accepted connection request is for its retransmitted request not its initial connection request. As a result, it sends data and then once the connection completes, a new connection with the server opens via the retransmitted connection of the client and it receives stale data from the previous connection.
+
+<u>Solution: TCP 3-Way Handshake</u>
+![[Pasted image 20250506005311.png]]
+
+SYN:
+- SYN stands for "Synchronize". It's a flag (a single bit) in the TCP header.
+- When the SYN bit is set to 1 in a TCP segment, it signifies that the sender wants to establish a connection and is proposing an initial sequence number.
+- SYN segments also consume one sequence number (even if they don't carry application data) because the synchronization itself is an event in the byte stream.
+
+3-Way Handshake because you have:
+1. Client ->Server SYN
+2. Server -> Client (SYN-ACK)
+3. Client->Server (ACK)
+
+Process:
+- Client sends SYN to server then moves to SYNSENT
+- Server sends SYN-ACK to client then moves to SYN RCVD
+- Client sends ACK to server for things like buffers and variables for the connection and then moves to ESTAB
+- Server receives client's ACK and moves to ESTAB
+-
+The process is more robust than 2-way because it requires both parties to acknowledge each other's initial synchronization attempts before the connection is considered fully open.
+
+<u>TCP: Closing a Connection</u>
+To close a connection, the clients and server each close their side of the connection by sending a TCP segment with FIN bit = 1. Then, they respond to the received FIN with ACK (or on receiving FIN, ACK can be combined with the party's own FIN)
+![[Pasted image 20250506015429.png]]
+
+**Principles of Congestion Control**
+Congestion is where there's too much data for the network to handle due to too many sources sending too much data too fast. It is different from flow control and can cause:
+- long delays (queueing in router buffers)
+- lost packets (buffer overflow at routers)
+
+<u>First Cause/Cost of Congestion</u>
+We are given $\lambda_{in}$ as the rate of one sender sending data.
+As $\lambda_{in}$ gets bigger, the total traffic trying to go through the router (2 * $\lambda_{in}$) starts to exceed the output link capacity which causes congestion due to buffers filling up and high delay. The left graph shows that up until R/2, the senders can get the throughput they want, but at a certain point it's capped at R/2 since the output link capacity is R. Meanwhile, the right graph is showing that as $\lambda_{in}$ reaches its bottlenecked point of R/2, the costs of congestion will appear aka delay will go up exponentially.
+![[Pasted image 20250506015724.png]]
+
+<u>Second Cause/Cost of Congestion</u>
+In this example, we have one router and finite shared output link buffers. 
+$\lambda_{in}$ represents the application layer input which is equal to the application layer output of $\lambda_{out}$. However, the transport layer input includes retransmissions, so it is given by $\lambda_{in}'$ and $\lambda_{in}'>=\lambda_{in}$ .
+The green rectangles denote copies of the original data used for retransmission.
+![[Pasted image 20250506021139.png]]
+Concepts:
+Ideally, we would like to have:
+- perfect knowledge: sender sends only when router buffers available (axes on graph do not exceed R/2)
+![[Pasted image 20250506022202.png]]
+- known loss: packets can be lost, dropped at router due to full buffers and sender only sends the packet if the packet is known to be lost 
+![[Pasted image 20250506022230.png]]
+
+However, realistically we have:
+- Duplicates: packets can be lost, dropped at router due to full buffers. sender times out prematurely, sending two copies both of which are delivered
+![[Pasted image 20250506022409.png]]
+- costs:
+	- more work (retransmission) for given goodput
+	- unneeded transmissions: link carries multiple copies of packet which decreases goodput
+
+<u>Throughput</u>: data rate at the receiver
+<u>Goodput</u>: rate at the receiver for data without duplicates
+
+<u>Third Cause/Costs of Congestion</u>
+Since the paths share the same router, on the top router since it has finite shared output link buffers, as the input of the red packet rate increases, it dominates the buffer capacity of the top router leaving no room for the blue packets which then get dropped. As a result, the throughput goes to 0.
+![[Pasted image 20250506022857.png]]
+
+When packets are dropped, any upstream transmission capacity used for that packet is wasted. C = capacity in graph below
+![[Pasted image 20250506022910.png]]- 
+![[Pasted image 20250506023711.png]]
+![[Pasted image 20250506023720.png]]
+
+**Approaches for Congestion Control**
+<u>End-End Congestion Control</u>
+- no explicit feedback from network
+- congestion inferred from end-system observed loss and delay
+- approach taken by TCP
+
+<u>Network-Assisted Congestion Control</u>
+- routers provide feedback to end systems
+- single bit indicated congestion (SNA, DECbit, TCIP/IP ECN, ATM)
+- explicit rate for sender to send at
+
+**TCP Congestion Control**
+A TCP sender manages its sending rate to avoid overwhelming the network, primarily using its congestion window (cwnd). Essentially, only packets inside the current dynamic size of cwnd can be sent, the others have to wait. 
+![[Pasted image 20250506024122.png]]
+In this example, blue packets can be sent without waiting for previously sent packets to be ACKed. However, the gray packets must wait
+
+cwnd:
+![[Pasted image 20250506024155.png]]
+
+The TCP Sending Rate is roughly determined by sending cwnd bytes, waiting for RTT for ACKs, then sending more bytes.
+![[Pasted image 20250506024244.png]]
+
+<u>Slow Start</u>
+Slow start is a process where the initial rate of sending data is slow but ramps up exponentially fast until the first loss event.
+- initially cwnd = 1 MSS (maximum segment size)
+- double cwnd every RTT which is done by increment cwnd for every ACK received
+![[Pasted image 20250506024431.png]]
+
+<u>Detecting and Reacting to Loss</u>
+When TCP slow starts, this can quickly lead to congestion if unchecked. So we introduce a threshold called $ssthresh$ (slow start threshold) which serves an an estimate of the point where congestion was last encountered and tells TCP when to switch from the aggressive growth of Slow Start to a more conservative, linear growth phase called Congestion Avoidance (CA).
+- If we detect loss, we set $ssthresh$ to half the cwnd (because we previously doubled cwnd which led to the loss itself)
+
+TCP Tahoe and TCP Reno are two early versions of TCP's Congestion Control Algorithms. 
+- TCP Tahoe starts with cwnd set to 1 MSS (maximum segment size) and then enters slow start. If it detects any loss like a timeout or 3 duplicate ACKs, then it sets ssthresh = cwnd / 2 and resets the cwnd size to 1 MSS then re-enters slow start until it hits the initialized ssthresh size, then switches to linear growth. Now on linear growth if it experiences loss again, it re-adjusts ssthresh and restarts the entire cycle.
+- TCP Reno also starts with cwnd set to 1 MSS and enters slow start. If there is a loss due to timeout, it repeats Tahoe's behavior by setting ssthresh = cwnd / 2 and cwnd = 1 MSS and re-enters slow start until hitting ssthresh then goes into CA mode. However, if it has loss due to 3 duplicate ACKs, then it sets ssthresh = cwnd / 2, cwnd = ssthresh and grows cwnd more linearly now (Congestion Avoidance) because it recognizes that duplicate ACKs mean that data is still flowing and thus the network is still capable of delivering some segments.
+
+![[Pasted image 20250506030923.png]]
+
+<u>Congestion Avoidance Algorithm: Additive Increase Multiplicative Decrease (AIMD)</u>
+Sender increases transmission rate (window size) until loss occurs
+- additive increase: increase cwnd by 1 MSS every RTT until loss detected
+- multiplicative decrease: cut cwnd in half after loss
+![[Pasted image 20250506030800.png]]
+
+<u>Summary</u>:
+![[Pasted image 20250506025729.png]]
+
+**TCP Throughput**
+Average Window Size = 3/4 W
+Average TCP Throughput = (3/4 * W/RTT) bytes/sec
+![[Pasted image 20250506032147.png]]
+![[Pasted image 20250506032155.png]]
+
+Example:
+![[Pasted image 20250506032233.png]]
