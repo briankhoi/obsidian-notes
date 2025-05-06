@@ -209,3 +209,29 @@ Finally, the timeout interval is given by EstimatedRTT + a safety margin (larger
 ![[Pasted image 20250505233011.png]]
 and thus, the timeout interval is given by:
 ![[Pasted image 20250505233047.png]]
+
+<u>Reliable Data Transfer</u>
+TCP creates an RDT service on top of IP's unreliable service that has:
+- pipelined segments
+- cumulative acks
+- single retransmission timer which is triggered by timeout events and duplicate acks
+
+![[Pasted image 20250506001203.png]]
+![[Pasted image 20250506001210.png]]![[Pasted image 20250506001222.png]]![[Pasted image 20250506001231.png]]![[Pasted image 20250506001245.png]]
+
+Fast Retransmit: If the sender receives 3 ACKs for the same data (triple duplicate ACKs), it resends the unack'ed segment with the smallest sequence number. This is because if there are a lot of duplicate ACKs, it is likely that the unack'ed segment is lost so we don't want for timeout and instead just re-send it.
+![[Pasted image 20250506002050.png]]Why duplicate ACKs are bad:
+![[Pasted image 20250506002211.png]]
+
+<u>Flow Control</u>
+Flow control is when receivers control the sender's transmission rate so that the sender won't overflow the receiver's buffer by transmitting too much, too fast which if the buffer is filled up, would cause data loss.
+![[Pasted image 20250506002307.png]]
+
+Flow Control Mechanism:
+![[Pasted image 20250506004358.png]]
+Here, the receiver "advertises" free buffer space by including rwnd (receiver window) in the TCP header or receiver-to-sender segments. RcvBuffer size is set via socket options (default 4096 bytes) with it being auto-adjusted by many OSes.
+The sender limits the amount of unack'ed in-flight data to the receiver's rwnd value, which acts at the flow control and guarantees that the receive buffer will not overflow.
+
+<u>Connection Management</u>
+
+<u>Establishing a Connection</u>
