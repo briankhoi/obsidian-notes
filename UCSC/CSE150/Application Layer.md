@@ -77,10 +77,6 @@ While downloading chunks, the peer also uploads chunks to other peers and can ch
 
 Once they have the entire file they can leave/stay. Peers can also come and go (churn).
 
-
-
-
-
 **Processes**
 A process is a program running within a host. Processes within the same host communicate using <u>inter-process communication</u> (defined by OS) while processes in different hosts communicate by exchanging messages
 - client process initiates communication while server process waits to be contacted
@@ -105,18 +101,6 @@ In general, apps need a transport service that has data integrity, good throughp
 Common app requirements:
 ![[Pasted image 20250423163346.png]]
 "elastic" for throughput means it makes use of whatever throughput it can get - there's no minimum throughput for it to be "effective"
-
-**Internet Transport Protocol Services**:
-- Transmission Control Protocol (TCP)
-	- reliable transport between sending and receiving process
-	- good flow and congestion control so send doesn't overwhelm receiver and it throttles sender when network is overloaded (controls/limits rate of messages)
-	- does not provide timing, minimum throughput guarantee, security
-	- setup required between client and server processes
-- User Datagram Protocol (UDP)
-	- has unreliable data transfer between sending and receiving process
-	- does not provide reliability, flow or congestion control, timing, throughput guarantee, security, or connection setup
-	- useful because it has much lower overhead than TCP, so it's faster and more efficient for apps where speed is important and some small data loss is fine (streaming audio/video, gaming, VoIP)
-![[Pasted image 20250423182657.png]]
 
 **Web and HTTP**
 A web page consists of a base HTML file which includes several referenced objects. These objects can be HTML files, JPEG images, Java applets, audio files, etc. and are each addressable by a URL like so:
@@ -208,7 +192,7 @@ Mail access protocols:
 ![[Pasted image 20250424004424.png]]
 
 **Domain Name System (DNS)**
-Hosts use IP addresses (32 bit) for addressing datagrams (a unit of data transmitted over a network), but names like yahoo.com are used by humans instead. How do we map IP addresses to names and vice versa?
+Hosts use IP addresses (32 bit) for addressing datagrams (a unit of data transmitted over a network, different from packets), but names like yahoo.com are used by humans instead. How do we map IP addresses to names and vice versa?
 
 Domain Name System (DNS) is a system involving a distributed database and an application-layer protocol which addresses this issue.
 
