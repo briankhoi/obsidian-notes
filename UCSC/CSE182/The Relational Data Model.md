@@ -140,3 +140,4 @@ Two levels of data independence:
 	- No, we can't determine that a set of attributes is a key but we can determine that a set of attributes is **not** a key.
 - **REMEMBER** (!!) that you can never ever determine which keys are a superkey or key based on looking at a table, you can only determine what is **NOT** a key/superkey!!
 
+

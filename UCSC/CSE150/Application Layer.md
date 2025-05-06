@@ -33,6 +33,7 @@ As a result, this architecture has self-scalability built in, but due to the dyn
 	- thus, we now use client-server architecture since management of clients in a P2P architecture has become a big issue
 
 **Hybrid Architecture Examples**
+These are essentially P2P architectures but require a central server to manage the peers
 <u>Skype</u>: Voice-over-IP (VoIP) P2P application
 - centralized server: finding address of remote party
 - direct client to client connection for calls/messaging
@@ -41,6 +42,44 @@ As a result, this architecture has self-scalability built in, but due to the dyn
 - chatting between two users (can be) P2P
 - centralized server: detects client presence and location
 	- user registers its IP address with central server when it comes online and contacts it to find the IP addresses of buddies
+
+**File Distribution Time**
+<u>Client-Server vs. P2P</u>
+Given the following diagram, let's break down how much time we would need to distribute a file of size $F$ from one server to $N$ peers/clients where the peer/client upload/download capacity is a limited resource
+![[Pasted image 20250505165834.png]]
+
+Starting with the client-server model, the server must sequentially send (upload) N file copies while each client must download the file copy. We define:
+- time for server to send one copy: $F/u_s$ 
+- time for server to send N copies: $NF/u_s$
+- minimum client download rate: $d_{min}$ 
+- minimum client download time: $F/d_{min}$
+Lastly, the time to distribute F to N clients using the client-server approach, denoted as $D_{c-s}$ is given as:
+$D_{c-s}>=max\{NF/u_s, F/d_{min}\}$
+This is basically saying the time is greater than the maximum between the time for the server to upload N copies of the file and the time it takes for a single client to download a copy of the file
+
+Now moving on to the P2P model, the server must upload at least one copy, while each peer must download a file copy. However, in the P2P model, the peers act as both clients and servers, first downloading the copy and then uploading/sending the copy over to other peers who don't have it yet. From the client-server analysis, we know that:
+- time for server to send one copy: $F/u_s$
+- minimum client download time: $F/d_{min}$
+We know that with $N$ peers we must download $NF$ bits overall. However, our download rate is constrained by the upload rate of how fast the peers or the server can upload/send the files over to all the peers, which is given by the server's upload rate $u_s$ and the sum of all the peer's upload rate $\sum u_i$. Thus, the time it would take for the clients to download $NF$ bits is given by: $NF/(u_s + \sum u_i)$
+Putting this all together, we have:
+$D_{P2P} >= max\{F/u_s, F/d_{min}, NF/(u_s + \sum u_i)\}$
+
+Overall, we can see that P2P is much faster:
+![[Pasted image 20250505172327.png]]
+
+<u>BitTorrent</u>:
+BitTorrent is a system where files are divided into 256 Kb chunks and a group of peers in the torrent exchange (send/receive) chunks of a file. It utilizes a tracker to track peers participating in the torrent.
+![[Pasted image 20250505172529.png]]
+
+A peer joining a torrent initially has no chunks and registers with the tracker to get a list of peers and connects to a subset of peers (neighbors). The peer then asks periodically to the other peers for the list of chunks that they have, then requests the missing chunks from peers, with the peer requesting the chunks that are the least common (rarest) first so they get replicated faster and don't disappear. 
+
+While downloading chunks, the peer also uploads chunks to other peers and can change peers to exchange chunks with. A common mechanism for this is "tit-for-tat" where the peer only sends chunks to the top 4 peers who are sending the initial peer chunks at the highest rate. All the other peers are "choked", meaning that they do not get sent any data from the peer. This top 4 ranking is re-evaluated every 10 seconds, and every 30 seconds, the peer randomly selects another peer outside of the top 4 to start sending chunks to in hopes that they will also send data back and become a top 4 contributor ("optimistically unchoke" them). This practice is to prevent leechers and ensure that peers are actually contributing.
+
+Once they have the entire file they can leave/stay. Peers can also come and go (churn).
+
+
+
+
 
 **Processes**
 A process is a program running within a host. Processes within the same host communicate using <u>inter-process communication</u> (defined by OS) while processes in different hosts communicate by exchanging messages
@@ -197,6 +236,20 @@ Also note that DNS services on top of translation hostname to IP address, also h
 - can be maintained by either organization or service provider
 
 <u>Local DNS name server</u>
-slide 51: file:///C:/Users/brian/Downloads/Chap2.pdf
+When the host initially makes a DNS query, it is sent to its local DNS server where there is a local cache of recent name-to-address translation pairs (can be out of date). If the local DNS doesn't have the query answer in its cache, it acts as a proxy and forwards the query into the DNS hierarchy of root name servers, TLD servers, and then authoritative servers.
+- Each ISP (residential ISP, company, university) has one
+- also called "default name server"
 
+<u>DNS Name Resolution</u>;
+Scenario: Host at cis.poly.edu wants IP address for gaia.cs.umass.edu
 
+Iterated query: each server contacted replies to host with the name of the next server to contact to get information (working down the DNS hierarchy) until the authoritative DNS server returns the IP to the host
+![[Pasted image 20250505162257.png]]
+
+Recursive query: Each contacted server contacts the next server in the hierarchy instead of the host (so the burden of name resolution is on the contacted name server) which can create a heavy load at upper levels of hierarchy
+![[Pasted image 20250505162420.png]]
+
+<u>DNS Caching</u>
+While the most impactful type of caching occurs in the local DNS name server, any name server can actually cache the name to IP address mapping after it learns it.
+- cached entries timeout (disappear) after some time, denoted by its TTL (time to live). they can also be out of date (best effort name to address translation) if the name host changes IP address and might only be updated internet-wide once all TTLs for that entry expire
+- TLD servers are typically cached in local name servers, so that root name servers are not often visited

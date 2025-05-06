@@ -855,3 +855,6 @@ WHERE S.age > MIN ( SELECT S2.age
 
 **Count Examples**
 Example 1:
+
+
+ended off on slide 27 https://piazza.com/class_profile/get_resource/m8w1et23hr96br/m9ristnyf007dy
