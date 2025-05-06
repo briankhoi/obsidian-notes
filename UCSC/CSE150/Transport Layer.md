@@ -142,15 +142,70 @@ Two types of pipelined protocols: Go-Back-N and Selective Repeat
 <u>Go-Back-N</u>
 Sender can have up to N unack'ed packet in its pipeline. The receiver only sends a cumulative ack which doesn't happen if there a gap. The sender has a timer for the oldest, unack'ed packet and when the timer expires it retransmits all unack'ed packets.
 
+Sender Diagram:
+![[Pasted image 20250505223830.png]]
 
 Sender FSM:
 ![[Pasted image 20250505222755.png]]
 
 Receiver FSM:
 ![[Pasted image 20250505222901.png]]
+- The receiver always sends an ACK for the correctly-received packet with the highest in-order sequence number. This can generate duplicate ACKs but the FSM only needs to remember the exepctedseqnum. 
+- For out of order packets, the FSM discards it (no buffering) and re-ACKs the packet with the highest in-order sequence number.
 
 Example:
 ![[Pasted image 20250505222927.png]]
 
+Visualization: https://www.tkn.tu-berlin.de/teaching/rn/animations/gbn_sr/
+
 <u>Selective Repeat</u>
-Sender can have up to N unack'ed packets in pipeline. The receiver sends an individual ack for each packet while the sender maintains a timer for each unack'ed packet and re-transmits the packet only when its associated timer expires.
+Sender can have up to N unack'ed packets in pipeline. The receiver sends an individual ack for each packet (and buffers packets as needed for eventual in-order delivery to upper layer) while the sender maintains a timer for each unack'ed packet and re-transmits the packet only when its associated timer expires signifying the ACK was not received.
+
+Diagram:
+The sender window is comprised of N consecutive sequence numbers and the window limits the sequence number of sent, unack'ed packets.
+![[Pasted image 20250505224758.png]]
+![[Pasted image 20250505224834.png]]
+
+Visualization (change setting on top left to selective repeat): https://www.tkn.tu-berlin.de/teaching/rn/animations/gbn_sr/
+
+Example:
+![[Pasted image 20250505225601.png]]
+When ACK 2 arrives, it checks if the window base (oldest unacknowledged packet) can move forward and since it does, and it sees that packets 3-5 are already marked as ACK in its internal records and thus advances the window to the next unacknowledged sequence number which is 6, so the window is now \[6, 7, 8 , 9] 
+
+Example 2:
+![[Pasted image 20250505230349.png]]Issue: receiver sees no difference in scenario A were things are working normally and there's wrap around behavior of the window and sequence numbers, compared to scenario B where it treats duplicate/re-transmitted packets as new ones when they're not.
+Fix: Make the window size W <= k/2 where k = number of sequence numbers (so max_seq_num = 3 leads to k=4 cause we start at 0).
+
+**TCP**
+<u>Properties</u>
+- point to point: one sender, one receiver
+- reliable, in order byte stream (no message boundaries)
+- pipelined: TCP congestion and flow control set window size
+- full duplex data: bi-directional data flow in same connection using MSS (maximum segment size)
+- flow controlled (sender will not overwhelm receiver)
+- connection-oriented: need handshaking (exchange of control messages) to initialize the sender and receiver state before data exchange
+
+<u>Structure</u>
+![[Pasted image 20250505231608.png]]
+
+<u>Example</u>
+![[Pasted image 20250505232550.png]]
+![[Pasted image 20250505232542.png]]
+
+<u>Timeout</u>
+The TCP timeout value must be longer than the RTT (but RTT varies).
+- if it's too short, then we have premature timeout, unnecessary retransmissions
+- if it's too long, we have a slow reaction to segment loss
+So, we estimate the RTT with a few ways:
+- **SampleRTT**: get the average of several recent measurements of time from segment transmission until ACK receipt (ignoring retransmissions). this approach is generally not as smooth since it varies quite a bit
+- **EstimatedRTT**: (1 - a) \* EstimatedRTT + a \* SampleRTT
+	- exponential weighted moving average so influence of past samples decreases exponentially fast
+	- typical value a = 0.125
+	![[Pasted image 20250505232757.png]]
+	- note: this is not a recursive formula but rather an iterative one, where the EstimatedRTT on the right is the new value to be calculated while EstimatedRTT on the right is the old EstimatedRTT value
+	- weights are the same over iterative calls
+	- EstimatedRTT is first initialized as the first SampleRTT
+Finally, the timeout interval is given by EstimatedRTT + a safety margin (larger safety margin if EstimatedRTT variation is large). This safety margin (DevRTT) is given by:
+![[Pasted image 20250505233011.png]]
+and thus, the timeout interval is given by:
+![[Pasted image 20250505233047.png]]
