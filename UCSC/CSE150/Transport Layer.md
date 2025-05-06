@@ -234,4 +234,4 @@ The sender limits the amount of unack'ed in-flight data to the receiver's rwnd v
 
 <u>Connection Management</u>
 
-<u>Establishing a Connection</u>
+Establishing a Connection:
