@@ -1161,7 +1161,6 @@ Valid only if:
 - The VALUES clause provides a value for every column in the StarsIn table.
 - The values are provided in the exact same order as the columns are defined in the table's schema (i.e., the order established when the table was created).
 
-
 <u>Insertion Edge Cases: </u>
 Order: Inserted value -> default row value -> NULL -> error
 1. If a new row is inserted into MovieStar, and a value is specified for an attribute, then that attribute will receive that value.
