@@ -24,7 +24,7 @@ SQL is a mix of two sub-languages:
 - SMALLINT
 	- short in C
 - FLOAT and REAL
-- DOUBLE PREICSION
+- DOUBLE PRECISION
 	- double in c
 - DECIMAL(n, d), NUMERIC(n, d)
 	- n decimal digits d of them to the right of the decimal
@@ -73,7 +73,7 @@ DROP TABLE Movies;
 ```
 
 **Modifying a Table**
-In general, use the "alyer" keyword
+In general, use the "ALTER" keyword
 ```SQL
 # adding a new column to the table
 ALTER TABLE MovieStar ADD phone CHAR(16);
@@ -136,7 +136,6 @@ CREATE TABLE MovieStar {
 	address VARCHAR(200),
 	gender CHAR(1),
 	birthDate DATE,
-	# to-do fix this in the slides is it unique or unique key ?
 	UNIQUE (birthDate) # write at the bottom of table
 };
 ```
@@ -185,6 +184,7 @@ CREATE TABLE StarsIn {
 	PRIMARY KEY (movieTitle, movieYear, starName),
 	FOREIGN KEY (movieTitle, movieYear) REFERENCES Movies,
 	FOREIGN KEY (starName) REFERENCES MovieStar
+	UNIQUE (attribute_name)
 };
 ```
 
