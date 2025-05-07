@@ -1138,6 +1138,9 @@ SQL's modification operations are INSERT, DELETE, and UPDATE. They are all DML (
 
 These modification operations change the state of the database and do not return any rows/values, but might return errors/error codes.
 
+Database modification statements are completely evaluated on the old state of the
+database, producing a new state of the database.
+
 **INSERT**
 A tuple $(v_1 , …, v_n)$ is inserted into the relation R, where attribute $A_i = v_i$ and default values (perhaps NULL) are entered for all missing attributes.
 
@@ -1258,3 +1261,84 @@ UPDATE MovieExec
 	WHERE cert# IN ( SELECT presC# FROM Studio );
 ```
 - The || operator can be used to concatenate the string 'Pres. ' with execName
+
+Example 3: 
+In this example we use the FROM clause to get data from another table. This update sets all seats to not paid in the tickets relation.
+```SQL
+UPDATE Tickets t
+SET seatNum = newt.seatNum, paid = FALSE
+FROM NewTickets newt
+WHERE t.ticketID = newt.ticketID
+AND t.custID = newt.custID
+ AND t.airlineID = newt.airlineID
+ AND t.flightNum = newt.flightNum
+```
+- The attributes in the SET MUST appear WITHOUT the tuple variable, so you can't do like `SET t.seatNum`, but for UPDATE, FROM, WHERE you can use the tuple variable/alias
+
+Example 4:
+```SQL
+UPDATE MovieExec e
+ SET netWorth = 6000000
+ WHERE NOT EXISTS (SELECT * FROM MovieExec e2
+ WHERE e2.Net
+```
+
+**SQL Transactions**
+<u>One-Statement-At-a-Time Semantics</u>
+Before we were just updating the DB one query/modification at a time
+![[Pasted image 20250507131317.png]]
+
+But in real life if there's concurrent operations or a crash in between statements, you get a lot of issues.
+
+This is where transactions come in. A transaction is a collection of one or more operations on the database that execute **atomically**, meaning that either all operations execute or none of them do.
+
+Transactions follow ACID properties:
+- Atomicity: All statements in a transaction succeed or none do.
+- Consistency: Database remains in a valid state before and after the transaction.
+- Isolation: Concurrent transactions do not interfere with each other.
+- Durability: Once a transaction is committed, its changes are permanent.
+
+<u>SQL Transactions</u>
+BEGIN TRANSACTION
+- Marks the beginning of a transaction, followed by one or more SQL statements.
+
+COMMIT
+- Ends the transaction. All changes to the database caused by the SQL statements within the transaction are committed (i.e., they are permanently there -- Durability) and visible in the database.
+
+ROLLBACK
+- Causes the transaction to abort or terminate. Any changes made so far by SQL statements within the transaction are undone (“rolled back”)
+
+Once Committed, the Transaction is DURABLE.
+
+Example:
+```SQL
+BEGIN TRANSACTION;
+UPDATE Accounts SET balance = balance + 100 WHERE account_num = 456
+UPDATE Accounts SET balance = balance - 100 WHERE account_num = 123 
+COMMIT;
+```
+
+Example 2:
+Consider the following transaction T that transfers an amount of money ($X)
+from one account to another:
+1. Add $X to Account 2.
+2. Test if Account 1 exists and has at least $X in it.
+	- If there is insufficient money, subtract $X from Account 2.
+	- Otherwise, subtract $X from Account 1.
+
+```SQL
+BEGIN TRANSACTION
+	<SQL statement to add $100 to account 2>
+	<SQL statement to check whether bank account 1 has >= $X>
+		If account 1 has < $X, then ROLLBACK;
+	<SQL statement to withdraw $100 from account 1>
+COMMIT;
+```
+
+If we have two transactions that operate concurrently they may interfere with each other.
+![[Pasted image 20250507132721.png]]
+In this case of the two transactions operate concurrently you get an error, because first T1 deposits 150 in A2's account giving a balance of $350. When T2 checks if A2 has enough money for the transaction, it sees it does due to T1 depositing that amount and subtracts $250 due to the transfer leaving A2 with $100 and thus finishes. But now for T1, it sees that A1 does not have $150 and thus rolls back its deposit of A2 and subtracts 150 from A2's account leaving A2 with a final balance of -50 when both transactions should have failed and rolled back.
+
+So now we violate consistency cause DB is not in valid state and isolation because transactions did not operate independently and interfered with each other.
+
+**Serializability**
