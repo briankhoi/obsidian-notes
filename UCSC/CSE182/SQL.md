@@ -1342,3 +1342,69 @@ In this case of the two transactions operate concurrently you get an error, beca
 So now we violate consistency cause DB is not in valid state and isolation because transactions did not operate independently and interfered with each other.
 
 **Serializability**
+Serializability is a type of isolation mechanism that is the strongest isolation guarantee in SQL. It provides the illusion that every transaction is executed one-by-one in serial order and thus ensures concurrent transactions produce the same result as if they were executed sequentially without interleaving.
+
+Format:
+```SQL
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN TRANSACTION;
+ <SQL Statements here>
+COMMIT;
+```
+
+<u>Dirty, Nonrepeatable, Phantom Reads</u>
+Dirty data is data that is written by a transaction but not yet committed by the transaction. A dirty read refers to the read of dirty data written by another transaction.
+
+A nonrepeatable read occurs when a transaction reads a row multiple times and some of the data changes due to a transaction modifying it and <u>committing</u> the change (dirty reads are before commitment).
+![[Pasted image 20250507133930.png]]
+
+A phantom read occurs when a transaction reads a set of rows multiple times and new rows inserted by another transaction appear in the result set.
+![[Pasted image 20250507133731.png]]
+
+Serialization prevents dirty reads, nonrepeatable reads, and phantom reads It requires locking data to guarantee isolation and needs to compromise with parallelization of execution (some parallelization possible but need to wait sometimes due to locks).
+
+![[Pasted image 20250507134308.png]]
+- SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+- SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+	- Repeated queries of a tuple during a transaction will retrieve the same value, even if its value was changed by another transaction.
+	- But reads of different data might return values that were committed by different transactions at different times.
+	- A second scan of a range (e.g., salary > 10000) might return “phantoms” not originally present in the first scan.
+- SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+	- Only clean (committed) reads, no dirty reads.
+	- But you might read data committed by different transactions.
+	- You might not get the same value even when you read the same data second time during a single transaction!
+- SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+	- May read dirty data
+	- Read data may be inconsistent if rolled back by the other transaction
+	- Acceptable where dirty data is not catastrophic but high parallelism is preferred
+
+**Read Only vs. Read Write Transactions**
+If a transaction only as read operations it is called a READ ONLY transaction.
+
+`SET TRANSACTION READ ONLY;`
+- Tells the SQL system that the transaction is read-only.
+- SQL may take advantage of this knowledge to parallelize many read-only transactions.
+
+`SET TRANSACTION READ WRITE;`
+- Tells SQL that the transaction may write data, in addition to read.
+- Default option if not specified; often (usually) not specified.
+
+Example:
+```SQL
+SET TRANSACTION READ ONLY / READ WRITE
+	ISOLATION LEVEL <Isolation_Level>;
+
+BEGIN TRANSACTION;
+	<SQL statements>
+COMMIT / ROLLBACK;
+```
+
+```SQL
+SET TRANSACTION READ ONLY
+	ISOLATION LEVEL REPEATABLE READ;
+BEGIN TRANSACTION;
+
+SELECT * FROM Accounts WHERE balance > 500;
+
+COMMIT;
+```
