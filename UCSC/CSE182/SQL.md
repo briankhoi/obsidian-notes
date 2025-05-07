@@ -1228,6 +1228,33 @@ Answer: Deletes all the tuples from MovieExec!!!
 Format:
 ```SQL
 UPDATE R
-SET <new-value-assignments>
-WHERE <condition>;
+	SET <new-value-assignments>
+	WHERE <condition>;
+
+-- expand new value assignment into
+<new-value-assignment> :-
+	<attribute> = <expression>, …, <attribute> = <expression>
 ```
+
+Examples:
+```SQL
+UPDATE Employees
+SET salary = 85000, dept = 'SALES'
+WHERE Ssnum = '123456789';
+
+UPDATE Employees
+SET salary = 25000
+WHERE salary IS NULL;
+
+UPDATE Employees
+SET salary = salary * 1.1
+WHERE salary > 100000;
+```
+
+Example 2: With subquery
+```SQL
+UPDATE MovieExec
+	SET execName = 'Pres. ' || execName
+	WHERE cert# IN ( SELECT presC# FROM Studio );
+```
+- The || operator can be used to concatenate the string 'Pres. ' with execName
