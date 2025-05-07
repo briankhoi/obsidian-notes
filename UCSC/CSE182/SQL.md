@@ -16,7 +16,7 @@ SQL is a mix of two sub-languages:
 	- create, delete, modify definition of tables and views
 - Data Manipulation Language (DML)
 	-  insert, delete, modify rows and query data
-	- used to ask questions abt the database and modify it
+	- used to ask questions abt the database and modify it like SELECT
 
 **SQL Data Types**
 - INT or INTEGER
@@ -960,4 +960,274 @@ WHERE department='Marketing';
 ```
 
 **MIN & MAX Examples**
-Example 1
+Example 1:
+Find the name and age of the oldest snowboarders.
+
+Wrong because can't mix aggregate and non-aggregate columns in select
+```SQL
+SELECT c.cname, MAX(c.age)
+FROM Customers c
+WHERE c.type=‘snowboard’;
+```
+
+Wrong because you're only filtering for snowboarder type in subquery not in outside query, people of other types can still appear when you only want snowboarders.
+```SQL
+SELECT c.cname, c.age
+FROM Customers c
+WHERE c.age = (SELECT MAX(c2.age)
+ FROM Customers c2
+ WHERE c2.type=‘snowboard’);
+```
+
+Example 2:
+Find the age of the youngest participant for each type of activity that Beginners participate in.
+
+Wrong cause mixing non-aggregate and aggregate types. Also note that if you just have aggregate types in the SELECT clause, it selects from the whole group filtered out by the WHERE
+```SQL
+SELECT c.type, MIN(c.age) 
+FROM Customers c 
+WHERE c.level=‘Beginner’;
+```
+
+Example 3:
+Find the age of the youngest participant for each type of activity that Beginners participate in.
+
+Wrong because it selects age of youngest <u>Beginner</u> for activity types that Beginners
+participate in
+```SQL
+SELECT c.type, MIN(c.age)
+FROM Customers c
+WHERE c.level=‘Beginner’
+GROUP BY c.type;
+```
+
+Right version:
+```SQL
+SELECT c.type, MIN(c.age)
+FROM Customers c
+WHERE EXISTS ( SELECT *
+ FROM Customers c2
+ WHERE c2.level=‘Beginner’
+ AND c2.type=c.type )
+GROUP BY c.type;
+```
+
+Also right:
+```SQL
+SELECT c.type, MIN(c.age)
+FROM Customers c
+GROUP BY c.type
+HAVING SOME ( c.level=‘Beginner’ );
+```
+
+**EVERY and SOME Clauses**
+The SOME clause is a synonym for the ANY clause and can be used interchangeably.
+The EVERY keyword is **NOT THE SAME** as the ALL keyword and behaves different. It is used as a boolean aggregate function, while ALL is used with comparison operators to compare a scalar value against a set of values returned by a subquery.
+
+For instance, ALL can be used like `WHERE age > ALL (SELECT age FROM children)`
+While EVERY is used like so:
+```SQL
+SELECT S.rating, MIN (S.age)
+FROM Sailors S
+WHERE S.age >= 18
+GROUP BY S.rating
+HAVING COUNT (*) > 1 AND EVERY (S.age <= 40);
+```
+
+ANY/SOME in HAVING is not supported by PostgreSQL but valid for exams since it's in SQL standard, meanwhile EVERY is valid for both.
+
+
+**Edge Cases/Carefulness**
+
+Example 1:
+Find the activities of Luke.
+```SQL
+SELECT *
+FROM Activities a
+WHERE a.cid = (SELECT c.cid
+ FROM Customers c
+ WHERE c.cname=‘Luke’);
+```
+If there's only one Luke in the Customers table the subquery works and returns one cid value. But if there's more than one Luke you get more than one value returned from the subquery and a run-time error occurs.
+
+Example 2:
+Find the names of all customers whose age is greater than the age of every/some snowboarder. (first two attempts try to find greater than every age, last two attempts are for greater than some ages).
+
+Let's evaluate what were to happen if there's no snowboarders
+
+Four attempts: We're just changing the aggregate operator in all of them (ALL, MAX, SOME, MIN)
+```SQL
+SELECT c.name
+FROM Customers c
+WHERE c.age > ALL (SELECT c2.age
+ FROM Customers c2
+ WHERE c2.type = ‘snowboard’);
+```
+- if no snowboarders, returns empty set and where condition evaluates to TRUE for all customers. This is because, logically, the statement "this customer's age is greater than every age in an empty list of ages" is vacuously true.
+```SQL
+SELECT c.name FROM Customers c 
+WHERE c.age > (SELECT MAX(c2.age) 
+		FROM Customers c2 
+		WHERE c2.type = ‘snowboard’);
+```
+- since it's an empty set, MAX would return NULL, and the where condition since it's evaluating vs. a NULL would return UNKNOWN. rows with an UNKNOWN condition in the WHERE are filtered out (treated as false) so query would return no customers. this is preferred.
+```SQL
+SELECT c.name
+FROM Customers c
+WHERE c.age > SOME (SELECT c2.age
+ FROM Customers c2
+ WHERE c2.type = ‘snowboard’);
+```
+- since it's an empty set, this would actually return false. For c.age > SOME (set) to be true, there must exist at least one value s in the set such that c.age > s. If the set is empty, no such value exists, so the condition is false. so query returns no customers and is also preferred
+```SQL
+SELECT c.name
+FROM Customers c
+WHERE c.age > (SELECT MIN(c2.age)
+ FROM Customers c2
+ WHERE c2.type = ‘snowboard’)
+```
+ - since it's an empty set, MIN would return NULL, and the where condition since it's evaluating vs. a NULL would return UNKNOWN. rows with an UNKNOWN condition in the WHERE are filtered out (treated as false) so query would return no customers. this is preferred
+
+<u>SOME/ANY vs. ALL</u>
+SOME/ANY are existential quantifiers, meaning that they're only true if there is **at least one element** in the set for which the condition is true. That's why if you encounter an empty set they become FALSE because there's no existence of elements in the set to make the definition true.
+
+Meanwhile for ALL, this is a universal quantification and is only true if every single element in the set satisfies a condition. So if there's no element in a set in which the condition is false (no counter examples), then it evaluates to true, such as the case with an empty set.
+
+**Relaxing Restrictions**
+Given the instructions "For each cid and day for which that customer did an activity, give cid, level and day, with COUNT of number of activities done on that day", this statement is correct:
+```SQL
+SELECT c.cid, c.level, a.day, COUNT(*)
+FROM Customers c, Activities a
+WHERE a.cid = c.cid
+GROUP BY c.cid, a.day;
+```
+Even though level isn't a GROUP BY attribute, in most SQL databases this still works since cid is the PK of Customers and is thus not ambiguous. This is allowed on HWs and exams but only if done correctly.
+
+Other solutions:
+```SQL
+SELECT c.cid, c.level, a.day, COUNT(*)
+FROM Customers c, Activities a
+WHERE a.cid = c.cid
+GROUP BY c.cid, c.level, a.day; -- c.level is now included
+```
+
+```SQL
+SELECT
+    c.cid,
+    c.level,
+    AggregatedActivities.day,
+    AggregatedActivities.activity_count
+FROM
+    Customers c
+JOIN
+    (SELECT
+         a.cid,
+         a.day,
+         COUNT(*) AS activity_count
+     FROM
+         Activities a
+     GROUP BY
+         a.cid, a.day) AS AggregatedActivities
+ON
+    c.cid = AggregatedActivities.cid;
+```
+
+
+**Database Modification Statements**
+SQL's modification operations are INSERT, DELETE, and UPDATE. They are all DML (Data Manipulation Language) statements like SELECT.
+
+These modification operations change the state of the database and do not return any rows/values, but might return errors/error codes.
+
+**INSERT**
+A tuple $(v_1 , …, v_n)$ is inserted into the relation R, where attribute $A_i = v_i$ and default values (perhaps NULL) are entered for all missing attributes.
+
+Example:
+```SQL
+INSERT INTO StarsIn(movieTitle, movieYear, starName)
+VALUES ('The Maltese Falcon', 1942, 'Sydney Greenstreet');
+```
+- This approach is preferred and more robust
+- The order of the values in the VALUES clause must match the order specified in your (movieTitle, movieYear, starName) list, not the physical order of columns in the table. 
+- This allow allows for inserting into just a few columns when the table might have a ton of columns
+Can also do:
+```SQL
+INSERT INTO StarsIn
+VALUES ('The Maltese Falcon', 1942, 'Sydney Greenstreet');
+```
+Valid only if:
+- The VALUES clause provides a value for every column in the StarsIn table.
+- The values are provided in the exact same order as the columns are defined in the table's schema (i.e., the order established when the table was created).
+
+
+<u>Insertion Edge Cases: </u>
+Order: Inserted value -> default row value -> NULL -> error
+1. If a new row is inserted into MovieStar, and a value is specified for an attribute, then that attribute will receive that value.
+2. If a new row is inserted into MovieStar, and no value is specified for an attribute, and that attribute has a DEFAULT (e.g., for address), then the value for that attribute will be that DEFAULT, which is 'Hollywood' for address.
+3. If a new row is inserted into MovieStar, and no value is entered for an attribute, and the value of that attribute does not have a DEFAULT, and the value of that attribute is allowed to be NULL (e.g.,for birthdate), then the value for the attribute will be NULL.
+4. If a new row is inserted into MovieStar, and no value is entered for an attribute, and the value of the attribute does not have a DEFAULT, and the value is not allowed to be NULL (e.g., for gender), then an error will be raised.
+
+Example 2:
+Add to the relation Studio all the studio names that appear in the studioName column of Movies but do not already occur in the studio names in the Studio relation.
+```SQL
+INSERT INTO Studio(studioName)
+	SELECT DISTINCT m.studioName
+	FROM Movies m
+	WHERE m.studioName NOT IN
+		(SELECT st.studioName
+		FROM Studio st);
+```
+- note that we use DISTINCT to avoid redundancy in the insertion!!
+
+Example 3:
+Puts the Disney2018Movies into the Movies table, setting movieYear and studioName values using constants.
+```SQL
+INSERT INTO Movies(movieTitle, movieYear, length, studioName)
+	SELECT dm.movieTitle, 2018, dm.length, 'Disney'
+	FROM Disney2018Movies dm;
+```
+
+**DELETE Clause**
+Format:
+```SQL
+DELETE FROM R
+	WHERE <condition>;
+```
+
+Example:
+```SQL
+DELETE FROM StarsIn
+WHERE movieTitle = 'The Maltese Falcon'
+ AND movieYear = 1942
+ AND starName = 'Sydney Greenstreet'
+```
+- The tuple ('The Maltese Falcon', 1942, 'Sydney Greenstreet') will be deleted from the relation StarsIn.
+
+Example 2:
+Deletes all movie executives whose net worth is less than 10 million dollars
+```SQL
+DELETE FROM MovieExec
+	WHERE netWorth < 10000000;
+```
+
+Example 3:
+Deletes all movie executives who produced movies starring Sydney Greenstreet
+```SQL
+DELETE FROM MovieExec
+WHERE cert# IN
+(SELECT m.producerC#
+ FROM Movies m, StarsIn s
+WHERE m.movieTitle = s.movieTitle AND m.movieYear = s.movieYear
+ AND s.starName = 'Sydney Greenstreet');
+```
+
+Example 4:
+What does `DELETE FROM MovieExec;` do?
+Answer: Deletes all the tuples from MovieExec!!!
+
+**UPDATE Clause**
+Format:
+```SQL
+UPDATE R
+SET <new-value-assignments>
+WHERE <condition>;
+```

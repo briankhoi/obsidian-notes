@@ -21,3 +21,5 @@ Write queries to answer the following questions:
 2. Which stars appeared in movies produced by MGM in 2019?
 3. Who is the president of MGM?
 4. Which movies are longer than the 2022 movie Avatar?
+
+![[Pasted image 20250507115225.png]]
