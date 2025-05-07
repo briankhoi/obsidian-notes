@@ -872,6 +872,92 @@ FROM Activities
 ```
 
 Example 3:
-
+Find the number of activities done by advanced customers
+```SQL
+SELECT COUNT(a.cid)
+FROM Customers c, Activities a
+WHERE c.cid = a.cid
+	AND c.level = 'Advanced';
+```
 
 Example 4:
+Find the number of activities done by different advanced customers.
+```SQL
+SELECT COUNT(DISTINCT a.cid)
+FROM Customers c, Activities a
+WHERE c.cid = a.cid
+	AND c.level = 'Advanced';
+```
+1. Would these queries have same results with COUNT(c.cid) instead of COUNT(a.cid)?
+	- yes
+2. What about if queries had COUNT(\*)/COUNT(DISTINCT \*) instead?
+	- no
+
+Example 5: 
+For each day, find the number of activities that were done by advanced customers.
+```SQL
+SELECT a.day, COUNT(a.cid)
+FROM Customers c, Activities a
+WHERE c.cid = a.cid
+	AND c.level = 'Advanced';
+GROUP BY a.day
+```
+
+Example 6:
+For each day, find the number of different advanced customers who did at least one activity.
+```SQL
+SELECT a.day, COUNT(DISTINCT a.cid)
+FROM Customers c, Activities a
+WHERE a.cid = c.cid
+ AND c.level = ‘Advanced’
+GROUP BY a.day;
+```
+
+Example 7:
+For each level and day, find the number of activities done that day by customers at that level.
+```SQL
+SELECT c.level, a.day, COUNT(a.cid)
+FROM Customers c, Activities a
+WHERE a.cid = c.cid
+GROUP BY c.level, a.day;
+```
+
+Example 8:
+For each level and day, find the number of activities done that day by different customers at that level.
+```SQL
+SELECT c.level, a.day, COUNT(DISTINCT a.cid)
+FROM Customers c, Activities a
+WHERE a.cid = c.cid
+GROUP BY c.level, a.day;
+```
+
+Example 9: 
+For each customer level, find the number of times that customers who are at that level went on a red slope, giving level as well as number of times, … but only if the number of times is at least 3. – The number of times should appear as redCount in the result
+```SQL
+SELECT c.level, COUNT(*) as redCount
+FROM Customers c, Activities a, Slopes s
+WHERE c.cid = a.cid
+	AND a.slopeid = s.slopeid
+	AND s.color = 'Red'
+GROUP BY c.level
+HAVING COUNT(*) >= 3;	
+```
+
+**SUM & AVG Examples**
+Example 1:
+Find the total revenue of the company, assuming Sales has qty and price columns.
+```SQL
+SELECT SUM(qty*price) 
+FROM Sales;
+```
+
+Example 2:
+Find the average salary of employees in the Marketing department.
+```SQL
+SELECT AVG(salary)
+FROM Employees
+WHERE department='Marketing';
+```
+
+**MIN & MAX Examples**
+Example 1
