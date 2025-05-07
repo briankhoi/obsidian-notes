@@ -74,7 +74,6 @@ The characteristics of unreliable channel will determine complexity of reliable 
 ![[Pasted image 20250505202445.png]]
 
 **Reliable Data Transfer**
-
 <u>Finite State Machines (FSMs)</u>
 Used to specify sender and receiver where the nodes are states and edges are events and actions.
 ![[Pasted image 20250505203246.png]]

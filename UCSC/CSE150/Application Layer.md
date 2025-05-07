@@ -156,7 +156,8 @@ Lastly, the <u>total delay</u> is given by Internet delay + access delay + LAN d
 In addition, note that if the link access rate was 15.4Mbps instead, the access link utilization would be 9.9% (denominator * 10 so this drops by a factor of 10), and the access delay would also be milliseconds now instead of minutes. However, achieving this needs increased access link speed which isn't too cheap.
 
 Now, imagine we instead install a local cache which is rather cheap. Keeping the same given information from earlier, how do we calculate the access link utilization or total delay? Assume the cache hit rate is 0.4.
-![[Pasted image 20250424001834.png]]Since we know the cache hit rate is 0.4, then that means 40% of requests are in the cache while 60% must be requested from the server by the cache. Thus, if 60% of requests use the access link and the data rate to browsers over access link is given at 1.5Mbps, then we have 0.6 * 1.5 Mbps = 0.9Mbps. Then, we do 0.9Mbps / 1.5 Mbps = 0.58 = 58% access link utilization.
+![[Pasted image 20250424001834.png]]
+Since we know the cache hit rate is 0.4, then that means 40% of requests are in the cache while 60% must be requested from the server by the cache. Thus, if 60% of requests use the access link and the data rate to browsers over access link is given at 1.5Mbps, then we have 0.6 * 1.5 Mbps = 0.9Mbps. Then, we do 0.9Mbps / 1.5 Mbps = 0.58 = 58% access link utilization.
 
 As for the total delay, we calculate that by 0.6 * (delay from origin servers) + 0.4 * (delay when satisfied at cache) = 0.6(2.01) + 0.4(several milliseconds) = roughly 1.2 seconds, which is less than if we had a 154 Mbps link and cheaper too!
 - i have no idea where 2.01 comes from, cause RTT is 2s, ask qian

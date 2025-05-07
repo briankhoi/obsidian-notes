@@ -3,8 +3,10 @@ A computer network is a group of two or more computer systems linked together.
 Networks are made of:
 - Links: connections between nodes and terminals
 - Nodes: Routers, switches - used to forward communication
+	- any device connected to a network that can send, receive, or forward information
 	- need routers and switches to serve as relays - can't just physically connect stuff together because sometimes you don't know who you're going to want to connect to
 - Terminals: Hosts, end-user devices - source/destination of communication
+	- these are end nodes
 
 **The Internet vs. an Internet**
 The term "internet" is an abbreviation of internetwork, which is a collection of interconnected networks with no central administration or management
@@ -46,7 +48,7 @@ A network switch is a piece of networking hardware that connects multiple device
 	- network for networks
 
 **Hosts**
- Hosts send packets of data through a sending function that takes an application message and breaks it into smaller chunks (packets) of length L bits, then transmits the packet into the access network at transmission rate R.
+Hosts send packets of data through a sending function that takes an application message and breaks it into smaller chunks (packets) of length L bits, then transmits the packet into the access network at transmission rate R.
 
 The packet transmission delay represents the time needed to transmit a L-bit packet into a link. It is given by:
 ![[Pasted image 20250408133922.png]]
@@ -61,7 +63,7 @@ The packet transmission delay represents the time needed to transmit a L-bit pac
 
 **Four Sources of Packet Delay**
 ![[Pasted image 20250409162425.png]]
-- $d_{nodal} is the total delay experienced at each node (like a router) for a packet
+- $d_{nodal}$ is the total delay experienced at each node (like a router) for a packet
 - $d_{proc}$ = is the nodal processing delay, which represents the time for checking bit errors and determining the output link. It is typically less than a millisecond.
 - $d_{queue}$ is the queuing delay, which represents the time waiting a output link for transmission and also depends on the congestion level of the router.
 - $d_{trans}$ is the transmission delay which covered in the section above is the length of the bits of queue processing
@@ -133,7 +135,7 @@ $R_c$ denotes the rate near/going into end system/computer and $R_s$ denotes the
 The **bottleneck link**, which is the link on the end-end path that constraints end-end throughput is always given by the lowest throughput on the link. So for example, if we are given $R_s < R_c$, then the average end-end throughput is no higher than $R_s$ since that's the bottleneck link. Vice-versa as well if $R_c > R_s$.
 
 Example:
-Given this Internet where you had 10 connections, the **per-connection** end-end throughput si given by $min(R_c, R_s, R/10)$ with R/10 cause of 10 connections evenly sharing R bit/sec
+Given this Internet where you had 10 connections, the **per-connection** end-end throughput is given by $min(R_c, R_s, R/10)$ with R/10 cause of 10 connections evenly sharing R bit/sec
 ![[Pasted image 20250409164456.png]]
 
 **Protocol Layers**
@@ -181,4 +183,3 @@ The Internet wasn't originally designed with much security in mind. So, here are
 - packet sniffing: promiscuous network interface (like wireshark) reads and records all packets (including passwords) passing by ![[Pasted image 20250410142039.png]]
 - IP spoofing: sending a packet but with a false source address ![[Pasted image 20250410142411.png]]
 	
-w

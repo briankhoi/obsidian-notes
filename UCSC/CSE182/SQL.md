@@ -854,7 +854,24 @@ WHERE S.age > MIN ( SELECT S2.age
 ```
 
 **Count Examples**
+Given the following tables:
+![[Pasted image 20250506183417.png]]
+
 Example 1:
+Find the total number of customers
+```SQL
+SELECT COUNT(cid)
+FROM Customers;
+```
+
+Example 2:
+Find the total number of days that customers engaged in activities
+```SQL
+SELECT SUM(DISTINCT day)
+FROM Activities
+```
+
+Example 3:
 
 
-ended off on slide 27 https://piazza.com/class_profile/get_resource/m8w1et23hr96br/m9ristnyf007dy
+Example 4:
