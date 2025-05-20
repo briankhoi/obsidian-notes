@@ -1407,3 +1407,80 @@ SELECT * FROM Accounts WHERE balance > 500;
 
 COMMIT;
 ```
+
+**SQL Views**
+Views are relations that are defined in terms of other relations, but they are not stored. However, they still act as logical tables which can be used in queries if they were tables. 
+
+You can create views and indices in SQL's Data Definition Language.
+
+<u>View Advantages</u>
+- Short hand/encapsulation: You can treat a view as a table for queries so we can use a view to define a shorthand for a concept that might involve a complicated query
+- Logical data independence: Even if the tables underlying a view change, the view can still be used in queries without re-writing the queries
+	- there's always a limit though, like if you delete an attribute in the table that the view uses then yes you need to re-write the view
+	- the views themselves need to be updated after a table change (depending on circumstances) but the queries that use the view don't need to change
+- Re-use: You and others who have access to it can re-use a view as often as you like
+- Authorization: People may be granted access to a view, even though they don't have access to the underlying tables
+	- They may not even know that the view isn't a table, and which tables underlie it
+
+<u>Properties</u>
+Only the definition of a view is stored in the DB, the contents are not stored.
+
+However, some DBs support Materialized Views where users can request tuples in a view are physically stored in a DB. But this poses challenges: if the relations used in the query that define the view are updated, then the MaterializedView contents are out of date.
+- some views are also not updatable
+- maintaining materialized views requires changing view vontents when underlying relations are updated which is expensive (so people don't usually do it!!)
+
+<u>Examples</u>
+```SQL
+CREATE VIEW DisneyMovies AS
+SELECT movieTitle AS title, movieYear AS year
+FROM Movies
+WHERE studioName = 'Disney';
+
+-- you can also rename attributes like this
+CREATE VIEW DisneyMovies(title, year) AS
+SELECT movieTitle, movieYear
+FROM Movies
+WHERE studioName = ‘Disney';
+```
+
+<u>Querying a View and Table</u>
+StarsIn is a table, ParamountMovies and ParamountStars are views.
+
+```SQL
+-- creating the view
+CREATE VIEW ParamountMovies AS
+	SELECT movieTitle , movieYear
+	FROM Movies
+	WHERE studioName = 'Paramount';
+
+-- querying the view
+SELECT DISTINCT s.starName
+FROM ParamountMovies p , StarsIn s
+WHERE p.movieTitle = s.movieTitle AND p.movieYear = s.movieYear ;
+
+-- creating a new view based on our query!
+CREATE VIEW ParamountStars AS
+	SELECT DISTINCT s.starName
+	FROM ParamountMovies p, StarsIn s
+	WHERE p.movieTitle = s.movieTitle AND p.movieYear = s.movieYear ;
+
+-- drop a view
+DROP View ParamountMovies;
+
+-- now that you've dropped a view, querying from it produces an error!
+SELECT * FROM ParamountMovies; -- errror
+-- the original table is still unchanged though
+SELECT * FROM Movies; -- no error
+```
+
+<u>View Updates</u>
+Some modification operations on views work, but others do not, generally failing either because the constraint on the underlying table would be violated, or the effect of the View modification is not well-defined on the underlying tables
+
+Examples:
+
+Example 1:
+![[Pasted image 20250520090203.png]]
+This would fail if any of the missing inserted columns like length is declared NOT NULL. However, if NULLs are allowed or default values exist, then it should be fine since it's just updating a single table.
+
+Example 2:
+![[Pasted image 20250520090229.png]]
