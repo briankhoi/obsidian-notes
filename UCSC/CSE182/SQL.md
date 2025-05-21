@@ -147,7 +147,7 @@ birthdate DATE NOT NULL,
 ```
 
 **Foreign Key**
-A foreign key is NOT a key, but rather a constraint on the table that the foreign key attribute must match the value of a key in another table.
+A foreign key is NOT a key, but rather a constraint on the table that the foreign key attribute must match the value of a key in another table in which that key is either a primary key or unique key.
 
 If the fields are named differently in each table but correspond to the same value, you have to specify the name of the field you want to link the foreign key to like in the Studio table. If the fields are named the same, you don't have to like in the Movies table
 ```SQL
@@ -1483,4 +1483,120 @@ Example 1:
 This would fail if any of the missing inserted columns like length is declared NOT NULL. However, if NULLs are allowed or default values exist, then it should be fine since it's just updating a single table.
 
 Example 2:
-![[Pasted image 20250520090229.png]]
+![[Pasted image 20250520090229.png]]This would work, especially since each row in the DisneyMovies view corresponds directly to a single row in the Movies base table and because the DisneyMovies table is just based on a single underlying table (Movies).
+
+Example 3:
+This would work
+![[Pasted image 20250520091135.png]]
+
+In general, views that do not include aggregates or joins (multiple tables) and are relatively straightforward are valid.
+
+**SQL Indices (Index)**
+A database index is like a shortcut that allows the DB to quickly jump to data without checking every row (which can take a long time). Keys are indexed automatically in many DB systems.
+
+It has no impact on the way we write queries.
+
+Syntax: `CREATE INDEX (INDEX_NAME) ON TABLE(ATTRIBUTES)`
+
+<u>Index Types</u>
+- Point lookups: put an index on a point like movieYear = 1990. Typically implemented with hash tables
+- Range lookups: things like movieYear > 1990. Typically implemented with B-Trees
+
+<u>Physical Independence</u>
+- SQL statements can be executed regardless of which indices (if any) exist in the DB
+- when indices are created or dropped, only the performance of SQL statements are impacted
+
+<u>Disadvantages</u>
+Having too many indices can be bad, as it leads to needing a lot of space for all the indices, a large time cost of searching indices, and needing a long update time for indices when the table is modified.
+
+<u>Designing a Good Index and Index Utilization</u>
+In generally, there isn't a single best-fits-all solution to creating indices, rather they depend on the workload at hand. Generally however, you want to put an index on attributes that appear most frequently in the WHERE clause of READ queries and be conservative about attributes on which WRITE is most common.
+
+Also be mindful that choices of indices may need to change over time to adapt to evolving workloads.
+
+In terms of index utilization, a DB has a DB optimizer component which tries to figure out the best way to execute each SQL query. In PostgreSQL, there is an EXPLAIN PLAN statement so you can see what plan the optimizer chooses for a SQL statement
+![[Pasted image 20250520110832.png]]
+
+Example 1:
+![[Pasted image 20250520101605.png]]Now, queries like
+```SQL
+SELECT *
+FROM Movies
+WHERE movieYear = 1990 AND studioName = ‘Disney’ ;
+```
+will be significantly faster due to the index.
+
+Example 2:
+![[Pasted image 20250520101857.png]]
+
+Example 3.1:
+How much would each of the indices help given the query:
+```SQL
+SELECT *
+FROM Movies
+WHERE studioName = 'Disney' AND movieYear < 1990;
+```
+![[Pasted image 20250520110421.png]]
+![[Pasted image 20250520110657.png]]
+
+Example 3.2:
+How much would each of the indices help if the WHERE clause was just movieYear < 1990?
+![[Pasted image 20250520110754.png]]
+![[Pasted image 20250520110810.png]]
+
+**DB Constraints**
+DB Constraints are rules enforced on data in a table:
+- PK/unique constraints
+- FK/referential-integrity constraints
+- attributed-based constraints
+- tuple-based constraints
+- assertions
+
+Random Examples:
+```SQL
+-- Adding and deleting NOT NULL constraints on the price attribute via the ALTER command
+ALTER TABLE Sells ALTER COLUMN price SET NOT NULL;
+
+ALTER TABLE Sells ALTER COLUMN price DROP NOT NULL;
+
+-- you can name a foreign key, only possible if you declare it as a schema element (aka at the bottom of the table definition)
+CONSTRAINT BeerNameFK FOREIGN KEY(beer) REFERENCES Beers(name)
+-- you can also declare a foreign key inline
+beer CHAR(20) REFERENCES Beers(name),
+
+-- you can also add it via ALTER cmd
+ALTER TABLE Sells ADD CONSTRAINT BeerNameFK FOREIGN KEY(beer) REFERENCES Beers(name); 
+
+ALTER TABLE Sells DROP CONSTRAINT BeerNameFK
+```
+
+<u>Foreign Key Constraints</u>
+If there is a FK constraint from referring relation R (child) to referenced relation S (parent), then violations can occur if:
+- An INSERT or UPDATE to R introduces values that are not found in S
+	- this action must be rejected
+- A DELETE or UPDATE to S causes some tuples of R to "dangle", referencing a value that no longer exists
+	- three ways to handle this
+
+Three ways to handle DELETE/UPDATE issues with FKs:
+- RESTRICT: Reject the modification (default action taken)
+- CASCADE: Make the same changes in child relation, so if we delete a parent tuple, we delete all child tuples whose FK corresponds with the deleted value/tuple in the parent. For update, instead of deleting we just update all the child's relations tuples that have that corresponding FK value to the new parent value
+- SET NULL: changes the FK value in all the tuples in child's relation that had the deleted/updated value to NULL, as there's no longer a corresponding tuple in the parent with the old value
+	- this operation fails if the FK attribute that is going to be replaced with NULL has a NOT NULL constraint
+
+<u>Choosing a Referential Integrity Policy</u>
+Syntax: ON \[UPDATE/DELETE] \[SET NULL/CASCADE]
+If no policy is specified, NO ACTION/RESTRICT (the default) is used. You can also specify NO ACTION or RESTRICT explicitly too.
+
+Example:
+```SQL
+CREATE TABLE Sells (
+bar CHAR(20),
+beer CHAR(20),
+price REAL,
+ PRIMARY KEY(bar, beer),
+FOREIGN KEY(beer)
+ REFERENCES Beers(name)
+ ON DELETE SET NULL
+ ON UPDATE CASCADE
+);
+```
