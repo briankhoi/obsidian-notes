@@ -4,35 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "5d651b7d0a3b4234",
+        "id": "5b60ed7d76489ea5",
         "type": "tabs",
         "children": [
           {
-            "id": "bc7382c22af65ffd",
+            "id": "a635e3366c8b796b",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "UCSC/CSE182/SQL.md",
+                "file": "UCSC/CSE150/Network Layer.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "SQL"
-            }
-          },
-          {
-            "id": "286e4a4f09c1e450",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "UCSC/CSE182/SQL.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "SQL"
+              "title": "Network Layer"
             }
           }
         ]
@@ -182,43 +168,44 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "bc7382c22af65ffd",
+  "active": "a635e3366c8b796b",
   "lastOpenFiles": [
-    "Pasted image 20250520090203.png",
+    "et.md",
+    "UCSC/CSE150/Network Layer.md",
+    "UCSC/CSE150/Transport Layer.md",
+    "UCSC/CSE150/Application Layer.md",
+    "Self Study/Istio/Istio Links.md",
+    "Self Study/Istio/Istio CRDs.md",
+    "Self Study/Istio/Istioctl.md",
+    "Self Study/Istio/Istio Components.md",
+    "Self Study/Istio/Service Mesh Introduction.md",
+    "Self Study/Kubernetes/Kubernetes Components.md",
+    "Images/Pasted image 20250520090051.png",
     "UCSC/CSE182/SQL.md",
-    "Pasted image 20250520110832.png",
-    "Pasted image 20250520110810.png",
-    "Pasted image 20250520110754.png",
-    "Pasted image 20250520110657.png",
-    "Pasted image 20250520110421.png",
-    "Pasted image 20250520101857.png",
-    "Pasted image 20250520101605.png",
-    "Pasted image 20250520091135.png",
-    "Pasted image 20250520090229.png",
+    "Images/Pasted image 20250520090203.png",
+    "Images/Pasted image 20250520110832.png",
+    "Images/Pasted image 20250520110810.png",
+    "Images/Pasted image 20250520110754.png",
+    "Images/Pasted image 20250520110657.png",
+    "Images/Pasted image 20250520110421.png",
+    "Images/Pasted image 20250520101857.png",
+    "Images/Pasted image 20250520101605.png",
+    "Images/Pasted image 20250520091135.png",
     "UCSC/CSE114A/Haskell.md",
     "UCSC/CSE114A/Elsa.md",
     "UCSC/CSE114A/Lambda Calculus.md",
     "UCSC/CSE114A/Logistics.md",
     "UCSC/CSE150/Introduction.md",
-    "UCSC/CSE150/Application Layer.md",
     "UCSC/CSE182/Lock In.md",
     "UCSC/CSE182/General Review.md",
     "UCSC/CSE182/The Relational Data Model.md",
     "UCSC/CSE182/Practice Homeworks.md",
     "UCSC/CSE182/Introduction.md",
-    "UCSC/CSE150/Transport Layer.md",
     "UCSC/CSE150/Logistics.md",
     "misc/create a link.md",
     "misc/Welcome.md",
     "Self Study/AI Agents/NVIDIA AI Agent Workshop TiECon 2025.md",
     "UCSC/CSE114A/Introduction.md",
-    "Self Study/Kubernetes/Kubernetes Volumes.md",
-    "2025-04-19.md",
-    "Self Study/Kubernetes/Kubernetes Services.md",
-    "Self Study/Kubernetes/Kubernetes Architecture.md",
-    "Self Study/Distributed Systems/Distributed Systems Learning.md",
-    "Self Study/Kubernetes/Kubernetes Components.md",
-    "Self Study/Terraform/Terraform Introduction.md",
     "Untitled.canvas",
     "Images",
     "Self Study/Kubernetes/Untitled",
@@ -229,6 +216,6 @@
     "UCSC",
     "Self Study/SRE",
     "Self Study/AI Agents",
-    "Self Study/Kubernetes/Service Meshes - Istio"
+    "Self Study/Istio"
   ]
 }

@@ -40,3 +40,5 @@
 **ReplicaSet**: Manages the replicas of a Pod
 ![[Pasted image 20250403211955.png]]
 Notice how the replicaset and pod share the same initial hash, and then the second hash part for the pod is the pod's unique name when created. 
+
+**Custom Resource Definitions (CRDS)**: Kubernetes has a custom resource definitions functionality to definite custom configuration objects for a user's needed use case
