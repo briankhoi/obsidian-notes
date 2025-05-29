@@ -1600,3 +1600,98 @@ FOREIGN KEY(beer)
  ON UPDATE CASCADE
 );
 ```
+
+**Attribute-Based Check**
+An attribute based check is a constraint on the value of a particular attribute that must evaluate to TRUE or UNKNOWN, otherwise you get an error. Attribute-based checks are performed only when a value for that attribute is inserted or updated.
+
+For the condition to reference any other tuples or relations, a subquery must be used.
+
+Examples:
+```SQL
+CREATE TABLE Sells (
+bar CHAR(20),
+beer CHAR(20)
+price REAL CHECK ( price <= 5.00 ),
+ PRIMARY KEY (bar, beer)
+);
+
+CREATE TABLE Sells (
+bar CHAR(20),
+beer CHAR(20) CHECK ( beer IN
+ (SELECT name FROM Beers) ),
+price REAL CHECK ( price <= 5.00 ),
+ PRIMARY KEY (bar, beer)
+);
+
+-- you can name your constraint!
+CREATE TABLE Sells (
+bar CHAR(20),
+beer CHAR(20) CHECK ( beer IN
+ (SELECT name FROM Beers) ),
+price REAL
+ CONSTRAINT price_is_cheap
+CHECK ( price <= 5.00 ),
+ PRIMARY KEY (bar, beer)
+);
+
+-- you can also use the word alter
+ALTER TABLE Sells ADD CONSTRAINT price_is_cheap
+CHECK ( price <= 5.00 );
+
+ALTER TABLE Sells DROP CONSTRAINT price_is_cheap;
+```
+
+
+**Tuple-based Checks**
+A tuple-based check allows for checking conditions in attributes of a relation in the same tuple. Like attribute-based checks, to reference other tuples or relations, a subquery must be used. Checks are also checked only on INSERT or UPDATE into relations with the check.
+
+A single attribute check may also be defined as a tuple based CHECK which makes it checked more frequently.
+
+Example:
+![[Pasted image 20250527180350.png]]
+
+**Assertions**:
+Assertions are used for testing. They must always be TRUE or else you get an error.
+
+Format:
+```SQL
+CREATE ASSERTION <name>
+	CHECK <condition>
+```
+
+**Triggers**:
+Assertions are difficult and expensive to implement, so DBMS don't implement them. Instead, we use triggers, which let a database administrator (DBA) determine when to check for conditions and decide what to do when those conditions occur.
+
+A trigger is also referred to as an event-condition-action (ECA) rule.
+- event: a database modification like INSERT
+- condition: a SQL boolean expression
+- action: any SQL statements
+Triggers can either be row-level triggers or statement-level triggers. 
+- Row-level triggers are executed once for each modified tuple
+- Statement-level triggers are executed just once for the entire SQL statement no matter how many tuples are modified by that statement
+
+Example:
+Instead of using a FK and rejecting insertions into a table when an attribute in the current table doesn't satisfy the FK constraint, we can create a trigger that adds a tuple to the original table with the unique attribute value.
+
+![[Pasted image 20250527181225.png]]
+
+Note: You can also use the phrase `CREATE OR REPLACE` for trigger and other CREATE statements. (replace to modify an existing trigger, if it does not exist, then create it).
+
+<u>Trigger Options</u>:
+- The Event: \[AFTER/BEFORE/INSTEAD OF] \[INSERT/DELETE/UPDATE/UPDATE OF/SELECT]
+	- the phrase `INSTEAD OF` is used if the relation is a view
+	- the phrase `UPDATE OF` is used if you're updating a particular attribute
+	- a clever way to execute modifications of a view is to have Triggers that translate them to appropriate modifications of the base tables - what does that mean?
+- `FOR EACH ROW`: used to indicate that it is a row-level trigger; it's absence implies that the trigger is a statement-level trigger
+- `REFERENCING`
+	- INSERT/DELETE/UPDATE statements all have old and new tuples/tables (if using statement-level then it's table). To distinguish between these two better we use the `REFERENCING` keyword
+	- Format: REFERENCING \[NEW/OLD] \[ROW/TABLE] AS \<name>
+	- some older systems don't require the referencing keyword but still good practice to put it
+- The Condition: A boolean valued condition evaluated on the DB either before or after the event depending on what is specified. The event can be INSERT/DELETE/UPDATE/SELECT and it accesses new/old values and entities through the names in the REFERENCING clause
+- The Action: FINISH ME!!
+
+Example #2:
+Using Sells(bar, beer, price) and a unary relation
+RipoffBars(bar), maintain a list of RipoffBars that
+raise the price of some beer by more than $1.
+![[Pasted image 20250528175433.png]]
