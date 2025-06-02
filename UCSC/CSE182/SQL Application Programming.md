@@ -263,3 +263,25 @@ Given the scenario: For the Beers(name, manf) relation, and Python variables old
 
 <u>Way #3: Construct a string with the SQL statement, store it in a variable and execute it with parameters</u>
 ![[Pasted image 20250601203728.png]]
+
+**psycopg2/Python Stored Functions and Procedures**
+Call a stored procedure using `CALL` and execute it using cursor.execute()
+`myCursor.execute( "CALL JoeMenu(%s, %s);", (theBeer, thePrice) )`
+
+You can use a Stored Function in a SQL statement anywhere that you can use a value of that type, so you can execute a SQL statement that uses a Stored Function using cursor.execute()
+`myCursor.execute( "SELECT Rate(%s);", (theBar, ) )` where RATE is a previously defined stored function
+
+**SQL Injection**
+SQL Injection is when you construct a SQL statement based on an input value provided from a user, and that input value is malicious/not what you expect.
+
+For example, if you have:
+`stmt = “UPDATE Emp SET salary = salary + 100 WHERE empID =” + user_input`
+The user can input `12345; DELETE FROM Emp;`, and all of a sudden your Emp table is deleted without you wanting it.
+
+To prevent SQL injection, you can:
+- Check that the types of user parameters match types that are expected
+	- does not work if expected type is a string
+	- you can check for things like user input corresponds to an employee in a table or something
+- Separate parameters from SQL command rather than constructing the SQL statement using user input
+	- do UPDATE in psycopg2 in Ways #2 and #3, not Way #1!
+
