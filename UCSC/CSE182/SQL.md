@@ -1688,7 +1688,10 @@ Note: You can also use the phrase `CREATE OR REPLACE` for trigger and other CREA
 	- Format: REFERENCING \[NEW/OLD] \[ROW/TABLE] AS \<name>
 	- some older systems don't require the referencing keyword but still good practice to put it
 - The Condition: A boolean valued condition evaluated on the DB either before or after the event depending on what is specified. The event can be INSERT/DELETE/UPDATE/SELECT and it accesses new/old values and entities through the names in the REFERENCING clause
-- The Action: FINISH ME!!
+- The Action:
+	- Actions can have more than one SQL statement. If this is the case, you need to wrap them around a BEGIN and END
+	- Statements inside Trigger actions should be modification statements
+	- PostgreSQL requires that Trigger action be a single Stored Procedure (what is that kobe bryant)?
 
 Example #2:
 Using Sells(bar, beer, price) and a unary relation

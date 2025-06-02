@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "5b60ed7d76489ea5",
+        "id": "7cef3ce562c33d99",
         "type": "tabs",
         "children": [
           {
-            "id": "a635e3366c8b796b",
+            "id": "bc98387edd600f87",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "UCSC/CSE182/SQL.md",
+                "file": "UCSC/CSE182/SQL Application Programming.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "SQL"
+              "title": "SQL Application Programming"
             }
           }
         ]
@@ -168,19 +168,27 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "a635e3366c8b796b",
+  "active": "bc98387edd600f87",
   "lastOpenFiles": [
-    "Pasted image 20250528175433.png",
-    "Pasted image 20250527181225.png",
-    "Pasted image 20250527181137.png",
-    "Pasted image 20250527180350.png",
-    "UCSC/CSE150/Network Layer.md",
-    "Pasted image 20250527090656.png",
-    "Pasted image 20250527085920.png",
-    "Pasted image 20250527085816.png",
-    "Pasted image 20250527085747.png",
-    "Pasted image 20250527085737.png",
+    "UCSC/CSE182/Practice Homeworks.md",
+    "UCSC/CSE182/SQL Application Programming.md",
+    "Pasted image 20250601174619.png",
+    "Pasted image 20250601174611.png",
+    "UCSC/CSE182/Relational Algebra.md",
+    "Pasted image 20250601174442.png",
+    "Pasted image 20250601174259.png",
+    "Pasted image 20250601174233.png",
+    "Pasted image 20250601174207.png",
+    "Pasted image 20250601174125.png",
+    "Pasted image 20250601174054.png",
+    "Pasted image 20250601174004.png",
+    "Pasted image 20250601173936.png",
+    "UCSC/CSE182/SQL.md",
+    "UCSC/CSE182/The Relational Data Model.md",
+    "UCSC/CSE114A/Haskell.md",
     "et.md",
+    "UCSC/CSE182/Introduction.md",
+    "UCSC/CSE150/Network Layer.md",
     "UCSC/CSE150/Transport Layer.md",
     "UCSC/CSE150/Application Layer.md",
     "Self Study/Istio/Istio Links.md",
@@ -189,23 +197,15 @@
     "Self Study/Istio/Istio Components.md",
     "Self Study/Istio/Service Mesh Introduction.md",
     "Self Study/Kubernetes/Kubernetes Components.md",
-    "Images/Pasted image 20250520090051.png",
-    "UCSC/CSE182/SQL.md",
-    "Images/Pasted image 20250520090203.png",
-    "UCSC/CSE114A/Haskell.md",
     "UCSC/CSE114A/Elsa.md",
     "UCSC/CSE114A/Lambda Calculus.md",
     "UCSC/CSE114A/Logistics.md",
     "UCSC/CSE150/Introduction.md",
     "UCSC/CSE182/Lock In.md",
     "UCSC/CSE182/General Review.md",
-    "UCSC/CSE182/The Relational Data Model.md",
-    "UCSC/CSE182/Practice Homeworks.md",
-    "UCSC/CSE182/Introduction.md",
     "UCSC/CSE150/Logistics.md",
     "misc/create a link.md",
     "misc/Welcome.md",
-    "Self Study/AI Agents/NVIDIA AI Agent Workshop TiECon 2025.md",
     "Untitled.canvas",
     "Images",
     "Self Study/Kubernetes/Untitled",

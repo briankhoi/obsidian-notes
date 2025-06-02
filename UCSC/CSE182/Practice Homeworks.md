@@ -22,4 +22,5 @@ Write queries to answer the following questions:
 3. Who is the president of MGM?
 4. Which movies are longer than the 2022 movie Avatar?
 
-![[Pasted image 20250507115225.png]]
+![[Pasted image 20250507115225.png]]![[Pasted image 20250601174611.png]]
+![[Pasted image 20250601174619.png]]

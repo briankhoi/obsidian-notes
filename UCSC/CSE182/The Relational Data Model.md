@@ -1,6 +1,11 @@
 **What is a Relational Data Model?**
 A relational data model is one where data is described and represented by the mathematical concept of a relation.
 
+It consists of 3 parts:
+- relation: structure of the data
+- relational algebra: operations on the data
+- RI, constraints on tuples, etc.: constraints on the data
+
 **Relations**
 A relation is a structure with rows (tuples) and columns (attributes), where they are sets and more specifically, a subset of a Cartesian product of sets
 

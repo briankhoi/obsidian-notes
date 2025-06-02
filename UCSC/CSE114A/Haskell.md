@@ -893,6 +893,167 @@ instance Eq Expr where
 
     (/=) :: Expr -> Expr -> Bool
     (/=) e1 e2 = interp [] e1 /= interp [] e2
+```
 
+```Haskell
+message :: String
+message = "Welcome to lecture 19!"
+
+{-
+
+Agenda:
+
+- Expanding the repertoire of our interpreter: 
+  - `let`-expressions
+  - If time:
+    - Function definitions!
+    - Function applications!
+
+-}
+
+
+{-
+
+`let`-expressions are ways to introduce a new variable and give it a scope.
+
+let x = 5 in
+  x + 3
+
+creates a new variable x bound to 3 and introduces a new scope in which that binding is in scope.
+
+Anatomy of a `let`-expression is
+
+let <var> = <expr> in <body>
+
+where <body> is just another expression, in which <var> is in scope.
+
+The value of a `let`-expression is whatever the value of its <body> is,
+in an environment that's been extended with a binding from <var> to the value of <expr>.
+
+-}
+-- lets
+
+letExample :: Int
+letExample = let x = 5
+                 y = 4
+              in x + y
+
+letExample' :: Int
+letExample' = let x = 5
+                  y = x + x
+                in x + y
+
+-- We could also just do this, with nested `let`-expressions.
+letExample'' :: Int
+letExample'' = let x = 5 in
+                 let y = x + x in
+                   x + y
+
+-- this evals to 6 + 6 since x + x is in 6's scope; nothing in 5's scope
+letExample''' :: Int
+letExample''' = let x = 5 in
+                  let x = 6 in
+                    x + x
+
+
+data Expr = Number Int 
+          | ArithExpr ArithOp Expr Expr
+          | IfZero Expr Expr Expr
+          | Var String
+          | Let String Expr Expr
+  deriving Show
+
+data ArithOp = Sum | Diff | Prod
+  deriving Show
+
+
+{-
+
+To evaluate a `let`-expression, what do we have to do?
+
+if the expression is
+
+let <var> = <expr> in <body>
+
+we'll need to...
+
+- determine the value that <var> should be bound to in the environment, by evaluating <expr>
+- add a binding that binds <var> to the value of <expr> to the environment we have
+- finally, evaluate <body> in that *extended* environment
+- and then the value of the entire `let`-expression is the value of <body>
+
+-}
+
+-- The `type` keyword lets us define a type alias
+-- A list of pairs of variables and their values
+-- [("x", 3), ("y", 4)]
+type Env = [(String, Int)]
+
+interp :: Env -> Expr -> Maybe Int
+interp env (Number n) = Just n
+interp env (Let s e1 e2) = case interp env e1 of
+    Just n -> interp ((s,n):env) e2
+    Nothing -> Nothing
+interp env (ArithExpr op e1 e2) = case (op, interp env e1, interp env e2) of
+    (Sum, Just v1, Just v2)  -> Just (v1 + v2)
+    (Diff, Just v1, Just v2) -> Just (v1 - v2)
+    (Prod, Just v1, Just v2) -> Just (v1 * v2)
+    _                        -> Nothing
+interp env (IfZero e1 e2 e3) = case interp env e1 of
+    Just n  -> if n == 0 then interp env e2 else interp env e3
+    Nothing -> Nothing
+interp env (Var s) = lookupInEnv s env
+
+lookupInEnv :: String -> Env -> Maybe Int
+lookupInEnv _ []     = Nothing
+lookupInEnv s ((name,value):xs) = if s == name then Just value else lookupInEnv s xs
+
+-- if0 3 then 4 else (2 * (9 - (x  + y)))
+example :: Expr
+example = IfZero (Number 3) (Number 4) (ArithExpr Prod (Number 2) (ArithExpr Diff (Number 9) (ArithExpr Sum (Var "x") (Var "y"))))
+
+example2 :: Expr
+example2 = Let "x" (Number 5) (ArithExpr Sum (Var "x") (Number 3))
+
+-- let x = 5 in
+--   let y = x + x in
+--     x + y
+example3 :: Expr
+example3 = Let "x" (Number 5) 
+            (Let "y" (ArithExpr Sum (Var "x") (Var "x"))
+              (ArithExpr Sum (Var "x") (Var "y")))
+
+-- let x = 5 in
+--   let x = 6 in
+--     x + x
+
+-- Our environment will be [] initially,
+-- then it'll be [("x", 5)],
+-- and then it'll be [("x", 6), ("x", 5)].
+example4 :: Expr
+example4 = Let "x" (Number 5)
+              (Let "x" (Number 6)
+                (ArithExpr Sum (Var "x") (Var "x")))
+
+-- let x = 5 in
+--   (let y = x + z in
+--     (let z = 10 in y))
+quizExample :: Expr
+quizExample = Let "x" (Number 5)
+               (Let "y" (ArithExpr Sum (Var "x") (Var "z"))
+                  (Let "z" (Number 10)
+                     (Var "y")))
+{-
+
+Where we're headed next: suppose we had this program:
+
+let f = \x -> x + x in
+  f 3
+
+let f = \x -> x + x in
+  let x = 5 in
+    f 3
+
+-}
 
 ```
