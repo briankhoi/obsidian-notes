@@ -258,3 +258,162 @@ Global vs. Decentralized:
 In a global algorithm, all routers have completely topology and link cost information. These algorithms are referred to as "link state" algorithms.
 
 Meanwhile, in a decentralized algorithm, the router knows physically connected neighbors, link cost to neighbors, and performs an iterative process of computation where their is an exchange of information with neighbors. These are called "distance vector" algorithms.
+
+<u>Dijkstra's Algorithm</u>
+Dijkstra's algorithm is a link state routing algorithm that computes the least cost paths from node node (source) to all other nodes and gives the forwarding table for that node. It results in a net topology where the link costs are known to all nodes via a "link state broadcast" and thus all nodes have the same information.
+
+Dijkstra's is iterative, meaning that after k iterations, we know the least cost path to k destinations.
+
+Notation:
+- C(x, y): link cost from node x to y. Is infinity if not direct neighbors
+- D(v): current value of cost of path from source to destination v
+- p(v): predecessor node along path from source to v
+- N': set of nodes whose least cost path is definitely known
+
+![[Pasted image 20250608165833.png]]
+
+Watch this one!!
+https://www.youtube.com/watch?v=_lHSawdgXpI&pp=ygUUZGlqa3N0cmEncyBhbGdvcml0aG0%3D
+
+![[Pasted image 20250608170759.png]]![[Pasted image 20250608170821.png]]
+
+From running Dijkstra's, we now have this forwarding table in our starting router:
+![[Pasted image 20250608170911.png]]
+
+In terms of algorithm complexity, Dijkstra's in our case is O(n^2) but can be optimized for O(n log(n)).
+
+Dijkstra's also causes oscillation in traffic. If it computes the least cost path, then suddenly every router will use that path and thus that path may be one of the heaviest cost paths due to link usage. Then, we'll have a cycle of different new least-cost paths show up, then be overloaded due to everyone now using it, which lets to oscillations in traffic throughput.
+![[Pasted image 20250608171039.png]]
+
+<u>Bellman-Ford Algorithm</u>
+The Bellman-Ford algorithm is an example of a distance vector algorithm and is based on dynamic programming.
+
+We start by defining $d_x(y)$ to be the cost of least-cost path from x to y. This is also equal to:
+![[Pasted image 20250608171424.png]]
+![[Pasted image 20250608171513.png]]
+
+<u>Link Cost Changes</u>
+Now while $d_x(y)$ is the cost of least-cost path from x to y, we also define a new term, $D_x(y)$ to be the <i>estimate</u> of the least cost from x to y. The node at x maintains a distance vector $D_x = [D_x(y): y \in N]$ and knows the cost to each neighbor v, represented by c(x, v). It also maintains its neighbors distance vector, so for each neighbor v, x maintains $D_v = [D_v(y): y \in N]$.
+
+The key idea behind this is that from time to time, each node sends its own distance vector estimate to neighbors. When x receives a new DV estimate from neighbor, it updates its own DV using the Bellman-Ford equation (under minor, natural conditions, then the estimate $D_x(y)$ converges to the actual least cost $d_x(y)$).
+
+Distance vector algorithms are:
+- Iterative and asynchronous
+	- Each local iteration is caused by local link cost changing and DV update message from neighbor
+- Distributed
+	- Each node notifies its neighbors only when its DV changes. Neighbors then notify their neighbors if necessary
+
+Each node:
+![[Pasted image 20250608172312.png]]
+
+Example:
+This is an example of the distance vector routing algorithm at play. Here, on the first vertical line/state, we initialize each node's estimated costs. Then, each node sends its estimated cost to all the other nodes, and from there they update and re-broadcast.
+![[Pasted image 20250608172404.png]]
+
+Example 2:
+![[Pasted image 20250608172533.png]]
+- At $t_0$, y detects link-cost change, updates its DV, informs its neighbors.
+- At $t_1$, z receives an update from y, updates its table, computes new least cost to x , sends its neighbors its DV. 
+- At $t_2$, y receives z’s update, updates its distance table. y’s least costs do not change, so y does not send a message to z.
+
+Example 3:
+![[Pasted image 20250608180251.png]]
+![[Pasted image 20250608180520.png]]
+![[Pasted image 20250608180628.png]]
+
+<u>Link State vs. Distance Vector Algorithms</u>
+Link State:
+- With n nodes and E links, O(nE) messages sent
+- O(n^2) algorithm requires O(nE) messages which may have oscillations
+- If router malfunctions, node can advertise incorrect link cost and each node computes only its own table
+
+Distance Vector:
+- Exchange between neighbors only so converge time varies
+	- may be routing loops
+	- count-to-infinity problem (bad news)
+- If router malfunctions, distance vector node can advertise incorrect path cost and each node's table is used by others so this error would propagate through the network
+
+<u>Hierarchal Routing</u>
+Previously, we have studied the ideal network where all routers are identical and the network is rather "flat". However, this is not true in practice. With let's say 600 million destinations, you can't store all the dsts in routing tables. In addition, as the Internet is a network of networks, each network admin may want to control routing in its own network.
+
+Hierarchal routing aggregates routers into regions called autonomous systems (AS). Routers in the same AS run the same routing protocol referred to as the "intra-AS" routing protocol with routers in different AS running different intra-AS routing protocols. There also exists a gateway router at the edge of its own AS which has a link to router in another AS.
+![[Pasted image 20250608181501.png]]
+
+Inter-AS Tasks:
+![[Pasted image 20250608181614.png]]
+
+Example:
+![[Pasted image 20250608181654.png]]
+
+Example 2:
+![[Pasted image 20250608181709.png]]Hot-potato routing: Send packet toward closet of two routers
+
+**Intra-AS Routing**
+Also known as interior gateway protocols (IGP). Most common intra-AS routing protocols:
+- RIP: Routing Information Protocol
+- OSPF: Open Shortest Path First
+- IGRP: Interior Gateway Routing Protocol (Cisco proprietary)
+
+<u>Routing Information Protocol (RIP)</u>
+RIP is a distance vector algorithm where DVs are exchanged with neighbors every 30s in response message via advertisement. Each advertisement is sent to a list of up to 25 destination subnets.
+
+Distance metric measures the number of hops (max 15), where each link has cost 1.
+![[Pasted image 20250608183457.png]]
+
+Failure and recovery: If no advertisement heard after 180s, then the neighbor/link is declared dead and routes via the neighbor is invalided, with new advertisements being sent to neighbors which they then also send new advertisements, thus propagating the link failure information quickly to the entire network.
+
+Example:
+In the example below, we can see the routing table initial state in router D at the bottom. Then, router A advertises its routing table to D, and thus since D sees a new path to get to z which involves 4 hops, it updates its routing table to route to router A in 5 hops (router D to A = 1, then 4 hops from router A to z).
+![[Pasted image 20250608183841.png]]
+
+<u>Open Shortest Path First (OSPF)</u>
+OSPF is a publicly available link state algorithm that has LS packet dissemination, a topology map at each node, and route computation via Dijkstra's. OSPF advertisement carries one entry per neighbor and advertisements are flooded to the entire AS (carried in OSPF messages directly over IP).
+
+In contrast to RIP, it as more features:
+- security: all OSPF messages authenticated
+- multiple same-cost paths allowed (only one path in RIP)
+- for each link, multiple cost metrics for different types of service (TOS)
+- integrated uni- and multicast support
+- hierarchal OSPF in large domains
+
+<u>The Internet's Inter-AS Routing Protocol: BGP</u>
+Border Gateway Protocol (BGP) is the de facto inter-domain routing protocol - "the glue that holds the Internet together."
+
+BGP provides each AS a means to obtain subnet reachability information from neighboring AS'es (eBGP), propagate reachability information to all AS-internal routers (iBGP), and determine "good" routes to other networks based on reachability information and policy. It also allows the subnet to advertise its existence to the rest of the Internet.
+
+In a BGP session, two BGP routers ("peers") exchange BGP messages over semi-permanent TCP connections. BGP is a "path vector" protocol. This means that when a BGP router advertises a route to a destination, it includes not just the destination network prefix, but also the _entire sequence of autonomous systems (ASes)_ that a datagram must traverse to reach that destination. This path information is crucial for avoiding loops and implementing routing policies.
+
+Example:
+When AS3 advertises a network prefix (a range of IP addresses) to AS1, AS3 "promises" that it will forward datagrams towards that prefix. This means if AS1 sends traffic destined for that prefix to AS3, AS3 will ensure it reaches the destination.
+![[Pasted image 20250608190156.png]]
+
+Example 2:
+![[Pasted image 20250608192315.png]]
+
+<u>BGP Route Selection</u>
+The router may learn about more than one route to destination AS; it selects the route based on:
+- local preference value attribute: policy decision
+- shortest AS-PATH
+- closest NEXT-HOP router: hot potato routing
+- additional criteria
+
+The advertised prefix includes BGP attributes (prefix + attributes = route). Two important attributes are:
+- AS-PATH: contains AS'es through which prefix advertisement has passed like AS 67
+- NEXT-HOP: indicates specific internal-AS router to next-hop AS (may be multiple links from current AS to next-hop AS)
+The gateway router receiving route advertisement uses an import policy to accept/decline it (uses policy based routing, can decline packet if a policy states like "never route through AS x")
+
+<u>BGP Messages</u>
+BGP Messages are exchanged between peers over a TCP connection.
+- OPEN: opens TCP connection to peer and authenticates sender
+- UPDATE: advertises new path (or withdraws old)
+- KEEPALIVE: keeps connection alive in absence of UPDATES; also ACKs OPEN request
+- NOTIFICATION: reports errors in previous msg; also used to close connection
+
+<u>Routing Policy</u>
+![[Pasted image 20250608194036.png]]
+![[Pasted image 20250608194213.png]]
+
+**Routing Differences**
+![[Pasted image 20250608194241.png]]
+
+**Broadcast Routing**
