@@ -417,3 +417,20 @@ BGP Messages are exchanged between peers over a TCP connection.
 ![[Pasted image 20250608194241.png]]
 
 **Broadcast Routing**
+Broadcast routing aims to deliver packets from source to all other nodes. However, duplicating all packets from the source is inefficient, so we employ in-network duplication.
+![[Pasted image 20250608194923.png]]
+
+Types of in-network duplication:
+- Flooding: when node receives broadcast packet, it sends a copy to all neighbors
+	- problems: cycles & broadcast storm
+- Controlled flooding: node only broadcasts packet if it hasn't broadcast the same packet before
+	- node keeps track of packet IDs arleady broadcasted
+	- or reverse path forwarding (RPF): only forward packet if it arrived on shortest path between node and source
+	- spanning tree: no redundant packets received by any node
+
+<u>Spanning Tree Approach</u>
+A spanning tree connects all nodes in a network with no loops. It starts with a center node, and then continues a cycle of each node sending a unicast join message to the center node, where the message is continuously forwarded until it arrives at a node already belonging to the spanning tree.
+![[Pasted image 20250608195451.png]]
+![[Pasted image 20250608195550.png]]
+Then, for source packet duplication, the nodes forward/make copies of the source packet only along the spanning tree.
+![[Pasted image 20250608195428.png]]
