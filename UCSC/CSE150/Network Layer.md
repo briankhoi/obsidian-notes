@@ -41,7 +41,7 @@ There are two fundamental architectures for packet-switched networks at the netw
 
 <u>Virtual Circuits</u>
 In the VC architecture, there is:
-- no call setup, teardown for each call before data flow
+- need call setup, teardown for each call before data flow
 - each packet carries VC ID (not dst IP)
 - each router on source-dest path maitnains "state" for each passing connection
 - VC can have dedicated sources (thus predictable service) by allocating links, bandwidth, buffer space, etc.
