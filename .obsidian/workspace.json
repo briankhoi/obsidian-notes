@@ -13,72 +13,15 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "UCSC/CSE150/Introduction.md",
+                "file": "CMU/18613 - Foundations of Computer Systems/Bits, Bytes, Integers, & Endianness.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Introduction"
-            }
-          },
-          {
-            "id": "9930af68cf4810fe",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "UCSC/CSE150/Network Layer.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Network Layer"
-            }
-          },
-          {
-            "id": "050762eda08fd835",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "CMU/18645 - How to Write Fast Code I/Architecture.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Architecture"
-            }
-          },
-          {
-            "id": "c53f2a4f7962aa95",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "UCSC/CSE150/Link Layer.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Link Layer"
-            }
-          },
-          {
-            "id": "887d606bc817530f",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "UCSC/CSE150/Transport Layer.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Transport Layer"
+              "title": "Bits, Bytes, Integers, & Endianness"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -225,20 +168,30 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "050762eda08fd835",
+  "active": "23e36c0a3dc65f74",
   "lastOpenFiles": [
-    "CMU/18645 - How to Write Fast Code I/Introduction.md",
+    "CMU/18664 - Software Refactoring/Refactoring Types and Tactics.md",
+    "Pasted image 20250828194332.png",
+    "CMU/18613 - Foundations of Computer Systems/Bits, Bytes, Integers, & Endianness.md",
+    "CMU/18652 - Foundations of Software Engineering/Planning and Estimation.md",
+    "Pasted image 20250828190116.png",
+    "Pasted image 20250828185919.png",
+    "Pasted image 20250828185643.png",
+    "Pasted image 20250828185432.png",
+    "Pasted image 20250828185200.png",
+    "Pasted image 20250828101951.png",
+    "Pasted image 20250828101708.png",
+    "Pasted image 20250828095040.png",
+    "Pasted image 20250828094842.png",
+    "UCSC/CSE150/Introduction.md",
+    "UCSC/CSE150/Network Layer.md",
+    "UCSC/CSE150/Transport Layer.md",
+    "UCSC/CSE150/Link Layer.md",
+    "CMU/18664 - Software Refactoring",
+    "CMU/18645 - How to Write Fast Code I/Matrix Multiplication.md",
+    "CMU/Untitled.md",
+    "CMU/18613 - Foundations of Computer Systems",
     "CMU/18645 - How to Write Fast Code I/Architecture.md",
-    "Pasted image 20250827142247.png",
-    "Pasted image 20250827141354.png",
-    "Pasted image 20250827141352.png",
-    "Pasted image 20250827141219.png",
-    "Pasted image 20250827140651.png",
-    "Pasted image 20250827132924.png",
-    "Pasted image 20250827132836.png",
-    "Pasted image 20250827132621.png",
-    "Pasted image 20250827131938.png",
-    "Pasted image 20250827131928.png",
     "CMU/18652 - Foundations of Software Engineering/In Class Questions.md",
     "CMU/18652 - Foundations of Software Engineering/Agile.md",
     "CMU/18652 - Foundations of Software Engineering/Software Engineering Methods Overview.md",
@@ -246,7 +199,6 @@
     "CMU/18652 - Foundations of Software Engineering/Software Engineering Methods",
     "CMU/18652 - Foundations of Software Engineering",
     "UCSC/CSE182/SQL.md",
-    "CMU/Untitled.md",
     "CMU/18645 - How to Write Fast Code I",
     "CMU",
     "UCSC/CSE182/Introduction.md",
@@ -255,23 +207,14 @@
     "UCSC/CSE182/Practice Homeworks.md",
     "UCSC/CSE182/Lock In.md",
     "UCSC/CSE150/Application Layer.md",
-    "UCSC/CSE150/Link Layer.md",
-    "UCSC/CSE150/Transport Layer.md",
-    "UCSC/CSE150/Network Layer.md",
     "UCSC/CSE150/Final Review.md",
-    "UCSC/CSE150/Introduction.md",
     "UCSC/CSE150/Security.md",
     "UCSC/CSE182/SQL Application Programming.md",
     "UCSC/CSE182/Relational Algebra.md",
-    "UCSC/CSE182/The Relational Data Model.md",
     "UCSC/CSE182/Untitled",
-    "UCSC/CSE114A/Haskell.md",
-    "et.md",
     "Untitled.canvas",
     "Images",
     "Self Study/Kubernetes/Untitled",
-    "UCSC/CSE150",
-    "UCSC/CSE114A/Untitled",
-    "UCSC/CSE182"
+    "UCSC/CSE150"
   ]
 }
