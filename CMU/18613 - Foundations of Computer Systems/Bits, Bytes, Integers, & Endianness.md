@@ -21,17 +21,12 @@ Then, we have the following operations on our sets.
 
 These bit-level operators of &, |, ~, and ^ are in C and can be applied to any "integral" data type like long, int, short, char, unsigned. Its arguments are bit vectors and applied bit-wise.
 ![[Pasted image 20250828094842.png]]
-v delete
-![[Pasted image 20250828083444.png]]
-
 In contrast to the bit-level operators, our logic operators of &&, || and ! have the following rules:
 - 0 is false
 - anything non-zero is true
 - always return 0 or 1
 - early termination (short-circuiting)
 ![[Pasted image 20250828095040.png]]
-v delete
-![[Pasted image 20250828083452.png]]
 ### Shift Operations
 Left Shift: $x << y$ 
 This shifts a bit-vector $x$, $y$ positions to the left and throws away the extra bits on the left. The right side is filled with 0's.
@@ -63,17 +58,80 @@ Ranges:
 ![[Pasted image 20250828101708.png]]
 In general with 2's complement, -x = ~x + 1, with the only exception being the minimum number in 2's complement due to the ranges
 
-take notes
-![[Pasted image 20250828085824.png]]
-![[Pasted image 20250828090125.png]]
-
 In C by default numbers are signed - to make unsigned prepend "unsigned" before the type like unsigned int or add a "U" as a suffix such as "429U".
-![[Pasted image 20250828090452.png]]
-![[Pasted image 20250828090512.png]]
--1 > 0 cause casts to unsigned 
-![[Pasted image 20250828090739.png]]
 
-numberline rounds by division always to the left no matter neg or pos so 2.5 -> 2 and -2.5 -> -3
+You can also cast unsigned to 2's complement and vice versa, such as 
+```
+int tx, ty;
+unsigned ux, uy;
+tx = (int) ux;
+uy = (unsigned) ty;
+```
+There is also implicit casting from unsigned to 2's/vice-versa that happens during assignments and procedure calls:
+```
+// value of ux gets converted to signed int before being assigned to tx; tx stays as a signed int;
+// however, this leads to two cases:
+// if ux is within positive range of the signed int, its value is preserved and converted successfully
+// if ux is above that range, its number gets re-interpreted to a negative number, e.g. 1000 would instead be -8 instead of interpreted as +8
+tx = ux; 
+
+// same behavior as above but for this one. positive number is fine, but for negative numbers they get interpreted as unsigned, so 1000 instead of -8 would be interpreted as +8
+uy = ty;
+
+// tx (signed) is converted to unsigned due to fun()'s parameter. then, the return value of fun() is casted to unsigned since fun() returns a signed but uy which it gets assigned to is unsigned
+int fun(unsigned u);
+uy = fun(tx);
+```
+
+![[Pasted image 20250828090452.png]]
+Rule: "If you perform an operation (like > or \==) between a signed int and an unsigned int, the C compiler implicitly casts the signed int to an unsigned int." 
+Also remember that -1 when converted to unsigned is the biggest number UMAX.
+![[Pasted image 20250828090512.png]]
+![[Pasted image 20250829194140.png]]
+![[Pasted image 20250829194149.png]]
+In general, casting from signed to unsigned or vice versa maintains the bit-pattern but reinterprets it, which can have unexpected effects
+
+Sign extension: Make copies of the sign bit and extend it as much as needed.
+![[Pasted image 20250829194347.png]]
+
+Sign truncation: Drop top bits until truncated to desired size.
+![[Pasted image 20250829194528.png]]
+Numbers smaller in magnitude yield expected behavior because the higher order bits are used for padding and make no difference when truncated.
+
+Unsigned addition: Binary addition and we discard any carry over past the amount of bits in the integer (i.e. final value is {sum} mod $2^w$ where $w$ represents how many bits the integer can hold)
+![[Pasted image 20250829200901.png]]
+For the last example, assuming 8-bit binary the max number is 256. However since the sum computed is above that 8-bit limit and instead a 9-bit integer, we remove the carryover higher order bit aka 446 mod 256 and get 190 as our final result.
+
+Two's complement addition: It's the same as unsigned addition, but the results are interpreted differently (like two positive numbers can result into a negative number if it causes the high order bit to be 1 or two negative numbers can be added to get a positive number if high order bit is 0)
+
+Multiplication
+$u << k$ gives $u * 2^k$. 
+![[Pasted image 20250829234532.png]]
+Also note this is only true if it doesn't overflow, e.g. 4-bit int 1000 << 2 = 0 !!!
+
+Division
+$u >> k$ gives $\lfloor \frac{u}{2^k} \rfloor$. For unsigned this uses logical shift and for 2's complement/signed integers it uses arithmetic shift and rounds to the left of the number line, not toward zero (e.g. -3.5 rounded to -4 and 2.5 rounded to 2).
+
+Unsigned division:
+![[Pasted image 20250829235118.png]]
+
+Signed division:
+![[Pasted image 20250829235141.png]]
+
+However, in C for signed division we don't want this behavior of always rounding to the left of the number line, especially for negative integers. We want to always round to zero. To achieve this, the C compiler detects if there is a negative number and if so, it adds a bias (does not do anything for positive numbers). This bias is aimed to correct -.25 rounding to -1 and instead round it to 0. This works by adding $2^k-1$ to our negative k-bit integer and doing the shift. This leads to the following cases for a 4-bit signed integer:
+![[Pasted image 20250830011029.png]]
+
+
+Endianness describes the order in which the bytes of a multi-byte number are physically stored in memory.
+- **Big-Endian**: Stores the **most significant byte** (the "big end") at the lowest memory address. This is similar to how we write numbers.
+- **Little-Endian**: Stores the **least significant byte** (the "little end") at the lowest memory address. This is used by most modern desktop processors.
+This is a property of the hardware's memory layout. It does not affect single-byte data types like char or byte arrays like strings, as they have no internal byte order to consider.
+
+As an example, say we are given the variable x with value 0x01234567. It's address (&x) is 0x100.
+
+First, this means that the most significant byte (MSB) is 01 and the least significant byte (LSB) is 67.
+![[Pasted image 20250830011327.png]]
+Notice how starting at the beginning of the address, we see a different byte depending on the system's architecture. In the big endian system, it stores the number in the same order you would read it, while on a little endian system it stores LSB first at the starting address. Also observe that we are changing the order of the bytes in our multi-byte value, but NOT the order of the bits in each byte (e.g. in little endian, the 67 does not become 76, but rather stays 67).
 ### Terminology
 - bit-width: width/length of a bit-vector
 - C short is 2 bytes long
