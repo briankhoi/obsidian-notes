@@ -50,3 +50,14 @@ Planning poker: combines analogy (relative judgement), disaggregation (breaking 
 - cautions
 	- need to balance estimation effort and estimation accuracy
 	- document assumptions made during estimation
+
+We measure
+- productivity (velocity) - how good is our team
+	- developer difficulty (points per iteration)
+	- developer effort (spent per iteration)
+	- customer value (points per iteration)
+	- customer # user cases (delivered per iteration)
+- predictability - how good is our process? (effort estimated vs. effort spent)
+- quality - how good is our product?
+	- number of issues/bugs
+	- number of tests/test coverage

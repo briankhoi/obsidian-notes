@@ -135,3 +135,17 @@ Notice how starting at the beginning of the address, we see a different byte dep
 ### Terminology
 - bit-width: width/length of a bit-vector
 - C short is 2 bytes long
+
+Review:
+test what happens when adding
+0111
+0111
+
+
+what is the most or smallest amount of rounding error given this number
+never use == on floating point nums cause u can round different due to order of ops
+
+lost rounding precision/information
+closer to 0 more precision
+
+round to even for floats

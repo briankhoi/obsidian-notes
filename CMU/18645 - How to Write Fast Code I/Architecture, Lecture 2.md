@@ -42,7 +42,9 @@ This process of letting other instructions advance first while you wait for a de
 	- Software pipelining
 	- Compiler tries to identify and moves instructions during the compilation process
 	![[Pasted image 20250827142247.png]]
-Both solutions although great, are still not enough. Instruction rescheduling must be implemented at the hardware, software, and algorithms level. 
+Both solutions although great, are still not enough. Instruction rescheduling must be implemented at the hardware, software, and algorithms level.
+
+Essentially, we know that pipelining is key. But we can't leave it just to the hardware or compiler. We ourselves need to write code to make pipelining easier.
 
 ### Analyzing Assembly
 Even if you think there are no dependencies in your code, you need to look at the ISA because that's what's been actually ran. When going to office hours they'll always ask if you've read the assembly.

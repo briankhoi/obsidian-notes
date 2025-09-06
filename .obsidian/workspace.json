@@ -20,8 +20,63 @@
               "icon": "lucide-file",
               "title": "Bits, Bytes, Integers, & Endianness"
             }
+          },
+          {
+            "id": "85fc2a98742e71cb",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.9.12"
+              },
+              "icon": "lucide-book-up",
+              "title": "Release Notes 1.9.12"
+            }
+          },
+          {
+            "id": "a7160f1075f88b0b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CMU/18664 - Software Refactoring/Refactoring Types and Tactics.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Refactoring Types and Tactics"
+            }
+          },
+          {
+            "id": "34a348922b31050d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CMU/18652 - Foundations of Software Engineering/Planning and Estimation.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Planning and Estimation"
+            }
+          },
+          {
+            "id": "1c799a4f564e04e1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CMU/18613 - Foundations of Computer Systems/Floating Point.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Floating Point"
+            }
           }
-        ]
+        ],
+        "currentTab": 4
       }
     ],
     "direction": "vertical"
@@ -160,6 +215,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "bases:Create new base": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
@@ -168,31 +224,33 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "23e36c0a3dc65f74",
+  "active": "1c799a4f564e04e1",
   "lastOpenFiles": [
-    "Pasted image 20250830011327.png",
-    "Pasted image 20250830011029.png",
-    "Pasted image 20250829235141.png",
-    "Pasted image 20250829235118.png",
-    "Pasted image 20250829234532.png",
-    "Pasted image 20250829200901.png",
-    "Pasted image 20250829194528.png",
-    "Pasted image 20250829194347.png",
-    "Pasted image 20250828090739.png",
-    "CMU/18613 - Foundations of Computer Systems/Bits, Bytes, Integers, & Endianness.md",
-    "Pasted image 20250829194149.png",
-    "Pasted image 20250829194140.png",
+    "Pasted image 20250906011306.png",
+    "Pasted image 20250906011202.png",
+    "Pasted image 20250906011152.png",
+    "Pasted image 20250906011143.png",
+    "Pasted image 20250906011011.png",
+    "Pasted image 20250906011001.png",
+    "Pasted image 20250906010936.png",
+    "Pasted image 20250906010926.png",
+    "Pasted image 20250905233226.png",
+    "Pasted image 20250905232953.png",
+    "Pasted image 20250905232616.png",
+    "CMU/18645 - How to Write Fast Code I/Benchmarking, Lecture 3.md",
+    "CMU/18613 - Foundations of Computer Systems/Floating Point.md",
+    "CMU/18645 - How to Write Fast Code I/Architecture, Lecture 2.md",
+    "CMU/18645 - How to Write Fast Code I/Matrix Multiplication, Lecture 1.md",
     "CMU/18664 - Software Refactoring/Refactoring Types and Tactics.md",
     "CMU/18652 - Foundations of Software Engineering/Planning and Estimation.md",
+    "CMU/18613 - Foundations of Computer Systems/Bits, Bytes, Integers, & Endianness.md",
     "UCSC/CSE150/Introduction.md",
     "UCSC/CSE150/Network Layer.md",
     "UCSC/CSE150/Transport Layer.md",
     "UCSC/CSE150/Link Layer.md",
     "CMU/18664 - Software Refactoring",
-    "CMU/18645 - How to Write Fast Code I/Matrix Multiplication.md",
     "CMU/Untitled.md",
     "CMU/18613 - Foundations of Computer Systems",
-    "CMU/18645 - How to Write Fast Code I/Architecture.md",
     "CMU/18652 - Foundations of Software Engineering/In Class Questions.md",
     "CMU/18652 - Foundations of Software Engineering/Agile.md",
     "CMU/18652 - Foundations of Software Engineering/Software Engineering Methods Overview.md",
@@ -210,8 +268,6 @@
     "UCSC/CSE150/Application Layer.md",
     "UCSC/CSE150/Final Review.md",
     "UCSC/CSE150/Security.md",
-    "UCSC/CSE182/SQL Application Programming.md",
-    "UCSC/CSE182/Relational Algebra.md",
     "UCSC/CSE182/Untitled",
     "Untitled.canvas",
     "Images",
