@@ -55,8 +55,8 @@ There are two types of denormalized values:
 Special values occur when exp = all 1's. 
 
 There are two types of special values:
-- When both exp and frac = all 1's, this represents the value of infinity and the result of an operation that overflows. This infinity can be both positive and negative (e.g. 1.0/0.0 = −1.0/−0.0 = +infinity, 1.0/−0.0 = −infinity)
-- When exp = all 1's and frac != all 1's. This represents the NaN (not a number) value, which represents cases when no numeric value can be determined (e.g. sqrt(-1))
+- When exp = all 1's and frac = all 0's, this represents the value of infinity and the result of an operation that overflows. This infinity can be both positive and negative (e.g. 1.0/0.0 = −1.0/−0.0 = +infinity, 1.0/−0.0 = −infinity)
+- When exp = all 1's and frac != all 0's. This represents the NaN (not a number) value, which represents cases when no numeric value can be determined (e.g. sqrt(-1))
 
 ![[Pasted image 20250904235019.png]]
 
@@ -109,8 +109,8 @@ You can't add two numbers in scientific notation unless their exponents are the 
 
 ### More Properties
 - C guarantees two levels:
-	- float for single precision
-	- double for double precision
+	- float for single precision (32-bit)
+	- double for double precision (64-bit)
 - Casting between int, float, and double changes the bit representation
 ![[Pasted image 20250905232616.png]]
 ![[Pasted image 20250905233226.png]]
