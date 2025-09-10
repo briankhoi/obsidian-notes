@@ -33,7 +33,7 @@ There are 3 types of floating point numbers:
 Normalized values happen when exp != all 0's and != all 1's.
 Since the exp part in the floating point encoding has to be unsigned, but the actual exponent we use in $2^E$ can be signed (so negative & positive), we encode the unsigned $exp$ as a biased value following the equation $exp = E + bias$, which allows us to represent E's negative number into a positive $exp$ format, which at runtime can be decoded back into the actual negative $E$ number using the same rearranged formula of $E = exp - bias$. 
 
-The bias for a k-bit value is $2^{k-1}-1$. This gives us the following ranges, where the bias for single precision is 127 and double is 1023. The image below also gives the new range of values:
+The bias for a k-bit exp value is $2^{k-1}-1$. This gives us the following ranges, where the bias for single precision is 127 and double is 1023. The image below also gives the new range of values:
 ![[Pasted image 20250904123732.png]]
 For example, exp = 1 would equal E = -126. Because in scientific notation, the range of the significand is always \[1.0, 2.0) and also exp != 0 for normalized values, we know that there will at least be a one. So thus we encode our significand with an "implied" 1, meaning we omit it from the encoding then add it back at decode time because we know it's always going to be there and it helps us save 1 bit of space.
 
@@ -56,13 +56,19 @@ Special values occur when exp = all 1's.
 
 There are two types of special values:
 - When exp = all 1's and frac = all 0's, this represents the value of infinity and the result of an operation that overflows. This infinity can be both positive and negative (e.g. 1.0/0.0 = −1.0/−0.0 = +infinity, 1.0/−0.0 = −infinity)
-- When exp = all 1's and frac != all 0's. This represents the NaN (not a number) value, which represents cases when no numeric value can be determined (e.g. sqrt(-1))
+- When exp = all 1's and frac != all 0's (so basically a non-zero number. this includes 1. NaN is NOT all 1's for both exp and frac it can be any non-zero value for frac). This represents the NaN (not a number) value, which represents cases when no numeric value can be determined (e.g. sqrt(-1))
 
 ![[Pasted image 20250904235019.png]]
 
 ### C Floating Point Decoding Examples
 ![[Pasted image 20250904234802.png]]
 ![[Pasted image 20250904234907.png]]
++ 1-3=-2
++ 1.10000
++ 1.1 
++ 1.5 * 2^-2
++ 3/2 * 1/4
++ 3/8
 ### Properties
 The IEEE 754 Format was deliberately designed so that a computer's hardware can compare two positive floating-point numbers very quickly. It can do this by taking a shortcut: instead of doing complicated math, it just treats their 32-bit (or 64-bit) patterns as if they were simple unsigned integers and compares those instead.
 

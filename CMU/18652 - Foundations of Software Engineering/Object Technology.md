@@ -32,3 +32,4 @@ A language for modelling different views of a system
 - class and component diagrams used to describe structure of system
 - activity and state diagrams used to describe behavior of system
 - pick a subset of diagrams that help you reach your specific goal
+- reflects reality

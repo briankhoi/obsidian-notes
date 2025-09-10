@@ -67,12 +67,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CMU/18652 - Foundations of Software Engineering/Object Technology.md",
+                "file": "CMU/18613 - Foundations of Computer Systems/Floating Point.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Object Technology"
+              "title": "Floating Point"
             }
           }
         ],
@@ -133,8 +133,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "b09449b3501a57fa",
@@ -227,18 +226,22 @@
   },
   "active": "1c799a4f564e04e1",
   "lastOpenFiles": [
+    "CMU/18613 - Foundations of Computer Systems/Untitled.md",
     "CMU/18613 - Foundations of Computer Systems/Floating Point.md",
+    "CMU/18652 - Foundations of Software Engineering/OOA.md",
+    "Pasted image 20250909135142.png",
+    "Pasted image 20250909135037.png",
+    "Pasted image 20250909134624.png",
+    "CMU/18645 - How to Write Fast Code I/Designing Fast Kernels.md",
+    "Pasted image 20250908141354.png",
+    "Pasted image 20250908141339.png",
+    "Pasted image 20250908141313.png",
+    "Pasted image 20250908141255.png",
+    "Pasted image 20250908140351.png",
+    "Pasted image 20250908135358.png",
+    "Pasted image 20250908134642.png",
+    "CMU/18645 - How to Write Fast Code I/Project Information.md",
     "CMU/18652 - Foundations of Software Engineering/Object Technology.md",
-    "Pasted image 20250906011306.png",
-    "Pasted image 20250906011202.png",
-    "Pasted image 20250906011152.png",
-    "Pasted image 20250906011143.png",
-    "Pasted image 20250906011011.png",
-    "Pasted image 20250906011001.png",
-    "Pasted image 20250906010936.png",
-    "Pasted image 20250906010926.png",
-    "Pasted image 20250905233226.png",
-    "Pasted image 20250905232953.png",
     "CMU/18645 - How to Write Fast Code I/Benchmarking, Lecture 3.md",
     "CMU/18645 - How to Write Fast Code I/Architecture, Lecture 2.md",
     "CMU/18645 - How to Write Fast Code I/Matrix Multiplication, Lecture 1.md",
@@ -265,10 +268,6 @@
     "UCSC/CSE182/Design Theory.md",
     "UCSC/CSE182/General Review.md",
     "UCSC/CSE182/Practice Homeworks.md",
-    "UCSC/CSE182/Lock In.md",
-    "UCSC/CSE150/Application Layer.md",
-    "UCSC/CSE150/Final Review.md",
-    "UCSC/CSE150/Security.md",
     "UCSC/CSE182/Untitled",
     "Untitled.canvas",
     "Images",
